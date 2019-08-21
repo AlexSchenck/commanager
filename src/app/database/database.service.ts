@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { concat, from, Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { from, Observable, of } from 'rxjs';
+import { concatMap, map } from 'rxjs/operators';
 
 import { DatabaseTable } from './database-table.enum';
 
@@ -23,40 +23,35 @@ export class DatabaseService {
 		this._connection = from(new Sqlite('Commanager'));
 
 		// Pass back an Observable with all of the table creation attached
-		return concat(
-			this._connection,
-			this.createDeckTable(),
-			this.createCardDefinitionTable(),
-			this.createCardInstanceTable(),
-			this.createCatalogTable()
+		return this._connection.pipe(
+			concatMap(db => this.createDeckTable(db)),
+			concatMap(db => this.createCardDefinitionTable(db)),
+			concatMap(db => this.createCardInstanceTable(db)),
+			concatMap(db => this.createCatalogTable(db))
 		);
 	}
 
-	private createDeckTable(): Observable<void> {
-		return of(null); // TODO
+	private createDeckTable(db: any): Observable<any> {
+		return of(db.execSQL('CREATE TABLE IF NOT EXISTS Deck')).pipe(map(() => db));
 	}
 
-	private createCardDefinitionTable(): Observable<void> {
-		return of(null); // TODO
+	private createCardDefinitionTable(db: any): Observable<any> {
+		return of(db.execSQL('CREATE TABLE IF NOT EXISTS CardDefinition')).pipe(map(() => db));
 	}
 
-	private createCardInstanceTable(): Observable<void> {
-		return of(null); // TODO
+	private createCardInstanceTable(db: any): Observable<any> {
+		return of(db.execSQL('CREATE TABLE IF NOT EXISTS CardInstance')).pipe(map(() => db));
 	}
 
-	private createCatalogTable(): Observable<void> {
-		return of(null); // TODO
+	private createCatalogTable(db: any): Observable<any> {
+		return of(db.execSQL('CREATE TABLE IF NOT EXISTS Catalog')).pipe(map(() => db));
 	}
 
 	public select<T>(table: DatabaseTable): Observable<T[]> {
-		return this._database.pipe(
-			map(db => db.all('SELECT * FROM ' + table.toString()))
-		);
+		return this._database.pipe(map(db => db.all('SELECT * FROM ' + table.toString())));
 	}
 
 	public selectOne<T>(table: DatabaseTable): Observable<T> {
-		return this._database.pipe(
-			map(db => db.get('SELECT * FROM ' + table.toString()))
-		);
+		return this._database.pipe(map(db => db.get('SELECT * FROM ' + table.toString())));
 	}
 }
