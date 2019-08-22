@@ -32,19 +32,38 @@ export class DatabaseService {
 	}
 
 	private createDeckTable(db: any): Observable<any> {
-		return of(db.execSQL('CREATE TABLE IF NOT EXISTS Deck')).pipe(map(() => db));
+		const sql = `
+		CREATE TABLE IF NOT EXISTS Deck (
+			Id INT PRIMARY KEY NOT NULL,
+			Name NVARCHAR(64) NOT NULL,
+			ColorIdentity INT NULL,
+			Commander NVARCAR(64) NULL
+		)`;
+		return of(db.execSQL(sql)).pipe(map(() => db));
 	}
 
 	private createCardDefinitionTable(db: any): Observable<any> {
-		return of(db.execSQL('CREATE TABLE IF NOT EXISTS CardDefinition')).pipe(map(() => db));
+		const sql = `
+		CREATE TABLE IF NOT EXISTS CardDefinition (
+			Id INT PRIMARY KEY NOT NULL
+		)`;
+		return of(db.execSQL(sql)).pipe(map(() => db));
 	}
 
 	private createCardInstanceTable(db: any): Observable<any> {
-		return of(db.execSQL('CREATE TABLE IF NOT EXISTS CardInstance')).pipe(map(() => db));
+		const sql = `
+		CREATE TABLE IF NOT EXISTS CardInstance (
+			Id INT PRIMARY KEY NOT NULL
+		)`;
+		return of(db.execSQL(sql)).pipe(map(() => db));
 	}
 
 	private createCatalogTable(db: any): Observable<any> {
-		return of(db.execSQL('CREATE TABLE IF NOT EXISTS Catalog')).pipe(map(() => db));
+		const sql = `
+		CREATE TABLE IF NOT EXISTS Catalog (
+			Id INT PRIMARY KEY NOT NULL
+		)`;
+		return of(db.execSQL(sql)).pipe(map(() => db));
 	}
 
 	public select<T>(table: DatabaseTable): Observable<T[]> {
