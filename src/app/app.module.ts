@@ -6,6 +6,7 @@ import { AppComponent } from "./app.component";
 import { IfAndroidDirective } from './common/directives/android-platform.directive';
 import { IfIosDirective } from './common/directives/ios-platform.directive';
 import { DecksComponent } from "./deck/decks.component";
+import { DeckDetailComponent } from "./deck/deck-detail.component";
 import { ItemsComponent } from "./item/items.component";
 import { ItemDetailComponent } from "./item/item-detail.component";
 
@@ -26,6 +27,7 @@ import { ItemDetailComponent } from "./item/item-detail.component";
     declarations: [
         AppComponent,
         DecksComponent,
+        DeckDetailComponent,
         IfAndroidDirective,
         IfIosDirective,
         ItemsComponent,

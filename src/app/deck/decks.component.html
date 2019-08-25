@@ -26,12 +26,15 @@ core theme, such as p-20, btn, h2, and list-group. You can view a full list of t
 class names available for styling your app at https://docs.nativescript.org/ui/theme.
 -->
 <GridLayout class="page">
-    <ListView [items]="items" class="list-group">
-        <ng-template let-item="item">
-            <Label [nsRouterLink]="['/item', item.id]" [text]="item.name"
-                class="list-group-item"></Label>
-            <button>Edit</button>
-            <button>Play</button>
+
+    <ListView [items]="deckList" class="list-group">
+        <ng-template let-deck="item">
+
+            <GridLayout orientation="horizontal" class="list-group-item">
+                <Label [nsRouterLink]="['/deck', deck.id]" [text]="deck.name" class="list-group-item"></Label>
+                <Button [nsRouterLink]="['/play', deck.id]" class="btn btn-primary" text="Play" (tap)="onTap($event)" horizontalAlignment="right"></Button>
+            </GridLayout>
+
         </ng-template>
     </ListView>
 </GridLayout>
