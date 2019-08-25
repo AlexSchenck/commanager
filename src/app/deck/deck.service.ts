@@ -13,10 +13,10 @@ export class DeckService {
 	constructor(
         private _databaseService: DatabaseService
     ) {
-        this.decks = this.getDecks();
+        this.decks = this.loadDecks();
     }
 
-    private getDecks(): Observable<IDeck[]> {
+    private loadDecks(): Observable<IDeck[]> {
         return this._databaseService.getDecks();
     }
 }
