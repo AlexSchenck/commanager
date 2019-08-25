@@ -10,7 +10,9 @@ So you can still use template expressions, bindings, templates as well as all th
 The ActionBar is the NativeScript common abstraction over the Android ActionBar and iOS NavigationBar.
 http://docs.nativescript.org/ui/action-bar
 -->
-<ActionBar title="My App" class="action-bar">
+<ActionBar title="Commanager" class="action-bar">
+    <NavigationButton icon="res://baseline_menu_black_48dp" *ifAndroid></NavigationButton>
+    <ActionItem icon="res://menu" ios.position="left" *ifIos></ActionItem>
 </ActionBar>
 
 <!--

@@ -3,6 +3,8 @@ import { NativeScriptModule } from "nativescript-angular/nativescript.module";
 
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
+import { IfAndroidDirective } from './common/directives/android-platform.directive';
+import { IfIosDirective } from './common/directives/ios-platform.directive';
 import { DecksComponent } from "./deck/decks.component";
 import { ItemsComponent } from "./item/items.component";
 import { ItemDetailComponent } from "./item/item-detail.component";
@@ -24,6 +26,8 @@ import { ItemDetailComponent } from "./item/item-detail.component";
     declarations: [
         AppComponent,
         DecksComponent,
+        IfAndroidDirective,
+        IfIosDirective,
         ItemsComponent,
         ItemDetailComponent
     ],
