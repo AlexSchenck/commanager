@@ -3,9 +3,9 @@ import { NativeScriptModule } from "nativescript-angular/nativescript.module";
 
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
+import { DecksComponent } from "./deck/decks.component";
 import { ItemsComponent } from "./item/items.component";
 import { ItemDetailComponent } from "./item/item-detail.component";
-import { DeckComponent } from "./deck/deck.component";
 
 // Uncomment and add to NgModule imports if you need to use two-way binding
 // import { NativeScriptFormsModule } from "nativescript-angular/forms";
@@ -23,9 +23,9 @@ import { DeckComponent } from "./deck/deck.component";
     ],
     declarations: [
         AppComponent,
+        DecksComponent,
         ItemsComponent,
-        ItemDetailComponent,
-        DeckComponent
+        ItemDetailComponent
     ],
     providers: [],
     schemas: [

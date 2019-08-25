@@ -1,20 +1,22 @@
 import { Component, OnInit } from "@angular/core";
+import { Observable } from "rxjs";
 
 import { IDeck } from "./deck.interface";
 import { DeckService } from "./deck.service";
-import { Observable } from "rxjs";
 
 @Component({
     selector: "ns-deck",
     moduleId: module.id,
-    templateUrl: "./deck.component.html"
+    templateUrl: "./decks.component.html"
 })
-export class DeckComponent implements OnInit {
+export class DecksComponent implements OnInit {
     decks: Observable<IDeck[]>;
 
-    constructor(private deckService: DeckService) { }
+    constructor(
+        private deckService: DeckService
+    ) { }
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.decks = this.deckService.decks;
     }
 }
