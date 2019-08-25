@@ -4,6 +4,7 @@ import { NativeScriptModule } from "nativescript-angular/nativescript.module";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { DecksComponent } from "./deck/decks.component";
+import { DeckDetailComponent } from "./deck/deck-detail.component";
 import { ItemsComponent } from "./item/items.component";
 import { ItemDetailComponent } from "./item/item-detail.component";
 
@@ -24,6 +25,7 @@ import { ItemDetailComponent } from "./item/item-detail.component";
     declarations: [
         AppComponent,
         DecksComponent,
+        DeckDetailComponent,
         ItemsComponent,
         ItemDetailComponent
     ],
