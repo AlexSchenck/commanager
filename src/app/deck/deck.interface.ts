@@ -1,4 +1,4 @@
-import { Color } from "tns-core-modules/color/color";
+import { Color } from "./color.enum";
 
 export interface IDeck {
     id?: number;

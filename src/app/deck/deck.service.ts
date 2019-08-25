@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { DatabaseTable } from '../database/database-table.enum';
 import { DatabaseService } from '../database/database.service';
 import { IDeck } from './deck.interface';
 
@@ -18,6 +17,6 @@ export class DeckService {
     }
 
     private getDecks(): Observable<IDeck[]> {
-        return this._databaseService.select(DatabaseTable.Deck);
+        return this._databaseService.getDecks();
     }
 }

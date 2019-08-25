@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { from, Observable, of } from 'rxjs';
 import { concatMap, map } from 'rxjs/operators';
 
+import { IDeck } from '../deck/deck.interface';
 import { DatabaseTable } from './database-table.enum';
 
 var Sqlite = require('nativescript-sqlite');
@@ -37,6 +38,22 @@ export class DatabaseService {
 			map(connection =>
 				from(connection.close()).pipe(map(this._connection = null))
 			)	
+		);
+	}
+
+	public getDecks(): Observable<IDeck[]> {
+		return this.select(DatabaseTable.Deck).pipe(
+			map(rows =>
+				rows.map(row => {
+					const deck: IDeck = {
+						id: row[1],
+						name: row[2],
+						colorIdentity: row[3],
+						commander: row[4]
+					};
+					return deck;
+				})
+			)
 		);
 	}
 
@@ -88,11 +105,17 @@ export class DatabaseService {
 		return of(db.execSQL(sql)).pipe(map(() => db));
 	}
 
-	public select<T>(table: DatabaseTable): Observable<T[]> {
-		return this._database.pipe(map(db => db.all('SELECT * FROM ' + table.toString())));
+	private select(table: DatabaseTable): Observable<any[]> {
+		return this._database.pipe(
+			map(db => from(db.all('SELECT * FROM ' + table.toString()))),
+			concatMap((rows: Observable<any[]>) => rows)
+		);
 	}
 
-	public selectOne<T>(table: DatabaseTable): Observable<T> {
-		return this._database.pipe(map(db => db.get('SELECT * FROM ' + table.toString())));
+	private selectOne(table: DatabaseTable): Observable<any> {
+		return this._database.pipe(
+			map(db => from(db.get('SELECT * FROM ' + table.toString()))),
+			concatMap((row: Observable<any>) => row)
+		);
 	}
 }
