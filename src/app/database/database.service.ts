@@ -31,13 +31,23 @@ export class DatabaseService {
 		);
 	}
 
+	public close(): Observable<any> {
+		// Get connection, close it, then remove our connection definition. If no connection just return null
+		return !this._connection ? null : this._connection.pipe(
+			map(connection =>
+				from(connection.close()).pipe(map(this._connection = null))
+			)	
+		);
+	}
+
 	private createDeckTable(db: any): Observable<any> {
 		const sql = `
 		CREATE TABLE IF NOT EXISTS Deck (
-			Id INT PRIMARY KEY NOT NULL,
+			Id INT NOT NULL,
 			Name NVARCHAR(64) NOT NULL,
-			ColorIdentity INT NULL,
-			Commander NVARCAR(64) NULL
+			ColorIdentity INT DEFAULT(0),
+			Commander NVARCAR(64) NULL,
+			PRIMARY KEY (Id)
 		)`;
 		return of(db.execSQL(sql)).pipe(map(() => db));
 	}
@@ -45,7 +55,9 @@ export class DatabaseService {
 	private createCardDefinitionTable(db: any): Observable<any> {
 		const sql = `
 		CREATE TABLE IF NOT EXISTS CardDefinition (
-			Id INT PRIMARY KEY NOT NULL
+			Id INT NOT NULL,
+			Name NVARCHAR(64) NOT NULL,
+			PRIMARY KEY (Id)
 		)`;
 		return of(db.execSQL(sql)).pipe(map(() => db));
 	}
@@ -53,7 +65,12 @@ export class DatabaseService {
 	private createCardInstanceTable(db: any): Observable<any> {
 		const sql = `
 		CREATE TABLE IF NOT EXISTS CardInstance (
-			Id INT PRIMARY KEY NOT NULL
+			Id INT NOT NULL,
+			CardDefinitionId INT NOT NULL,
+			CurrentDeckId INT NULL,
+			PRIMARY KEY (Id),
+			FOREIGN KEY (CardDefinitionId) REFERENCES CardDefinition(Id),
+			FOREIGN KEY (CurrentDeckId) REFERENCES Deck(Id)
 		)`;
 		return of(db.execSQL(sql)).pipe(map(() => db));
 	}
@@ -61,7 +78,12 @@ export class DatabaseService {
 	private createCatalogTable(db: any): Observable<any> {
 		const sql = `
 		CREATE TABLE IF NOT EXISTS Catalog (
-			Id INT PRIMARY KEY NOT NULL
+			Id INT NOT NULL,
+			CardDefinitionId INT NOT NULL,
+			DeckId INT NOT NULL,
+			PRIMARY KEY (Id),
+			FOREIGN KEY (CardDefinitionId) REFERENCES CardDefinition(Id),
+			FOREIGN KEY (DeckId) REFERENCES Deck(Id)
 		)`;
 		return of(db.execSQL(sql)).pipe(map(() => db));
 	}
