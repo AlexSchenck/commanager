@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { DatabaseService } from './database/database.service';
+import { DatabaseService } from './common/database/database.service';
 
 @Component({
     selector: "ns-app",
