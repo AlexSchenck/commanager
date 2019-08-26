@@ -1,10 +1,10 @@
 <ActionBar title="{{title}}" class="action-bar"></ActionBar>
 <StackLayout orientation="vertical" class="page">
-    <StackLayout orientation="vertical" style="margin: 5%">
+    <StackLayout orientation="vertical" style="margin: 2% 5%">
         <TextField hint="Name" [text]="deck?.name" maxLength="64" class="input input-border"></TextField>
         <TextField hint="Commander" [text]="deck?.commander" maxLength="64" class="input input-border"></TextField>
     </StackLayout>
-    <Label class="h2" text="Color Identity:" style="margin-left: 5%"></Label>
+    <Label class="h3" text="Color Identity:" style="margin-left: 5%"></Label>
     <StackLayout orientation="horizontal">
         <CheckBox class="h2" text="W" width="18%" style="margin-left: 5%"></CheckBox>
         <CheckBox class="h2" text="U" width="18%"></CheckBox>
@@ -12,4 +12,5 @@
         <CheckBox class="h2" text="R" width="18%"></CheckBox>
         <CheckBox class="h2" text="G" width="18%"></CheckBox>
     </StackLayout>
+    <Label class="h3" text="My Shared Cards:" style="margin-left: 5%; margin-top: 2%"></Label>
 </StackLayout>
