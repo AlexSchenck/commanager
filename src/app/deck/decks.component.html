@@ -36,7 +36,7 @@ class names available for styling your app at https://docs.nativescript.org/ui/t
             <ng-template let-deck="item">
                 <GridLayout orientation="horizontal" class="list-group-item">
                     <Label [nsRouterLink]="['/deck', deck.id]" [text]="deck.name" class="list-group-item"></Label>
-                    <Button [nsRouterLink]="['/play', deck.id]" class="btn btn-primary" text="Play" (tap)="onTap($event)" horizontalAlignment="right"></Button>
+                    <Button [nsRouterLink]="['/play', deck.id]" class="btn btn-primary" text="Play" horizontalAlignment="right"></Button>
                 </GridLayout>
             </ng-template>
         </ListView>
