@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { from, Observable, of } from 'rxjs';
 import { concatMap, map } from 'rxjs/operators';
 
-import { IDeck } from '../deck/deck.interface';
 import { DatabaseTable } from './database-table.enum';
 
 var Sqlite = require('nativescript-sqlite');
@@ -41,22 +40,6 @@ export class DatabaseService {
 		);
 	}
 
-	public getDecks(): Observable<IDeck[]> {
-		return this.select(DatabaseTable.Deck).pipe(
-			map(rows =>
-				rows.map(row => {
-					const deck: IDeck = {
-						id: row[1],
-						name: row[2],
-						colorIdentity: row[3],
-						commander: row[4]
-					};
-					return deck;
-				})
-			)
-		);
-	}
-
 	private createDeckTable(db: any): Observable<any> {
 		const sql = `
 		CREATE TABLE IF NOT EXISTS Deck (
@@ -66,7 +49,7 @@ export class DatabaseService {
 			Commander NVARCAR(64) NULL,
 			PRIMARY KEY (Id)
 		)`;
-		return of(db.execSQL(sql)).pipe(map(() => db));
+		return from(db.execSQL(sql)).pipe(map(() => db));
 	}
 
 	private createCardDefinitionTable(db: any): Observable<any> {
@@ -76,7 +59,7 @@ export class DatabaseService {
 			Name NVARCHAR(64) NOT NULL,
 			PRIMARY KEY (Id)
 		)`;
-		return of(db.execSQL(sql)).pipe(map(() => db));
+		return from(db.execSQL(sql)).pipe(map(() => db));
 	}
 
 	private createCardInstanceTable(db: any): Observable<any> {
@@ -89,7 +72,7 @@ export class DatabaseService {
 			FOREIGN KEY (CardDefinitionId) REFERENCES CardDefinition(Id),
 			FOREIGN KEY (CurrentDeckId) REFERENCES Deck(Id)
 		)`;
-		return of(db.execSQL(sql)).pipe(map(() => db));
+		return from(db.execSQL(sql)).pipe(map(() => db));
 	}
 
 	private createCatalogTable(db: any): Observable<any> {
@@ -102,20 +85,37 @@ export class DatabaseService {
 			FOREIGN KEY (CardDefinitionId) REFERENCES CardDefinition(Id),
 			FOREIGN KEY (DeckId) REFERENCES Deck(Id)
 		)`;
-		return of(db.execSQL(sql)).pipe(map(() => db));
+		return from(db.execSQL(sql)).pipe(map(() => db));
 	}
 
-	private select(table: DatabaseTable): Observable<any[]> {
+	public select(table: DatabaseTable): Observable<any[]> {
+		if (!table) return of(null);
+
 		return this._database.pipe(
 			map(db => from(db.all('SELECT * FROM ' + table.toString()))),
 			concatMap((rows: Observable<any[]>) => rows)
 		);
 	}
 
-	private selectOne(table: DatabaseTable): Observable<any> {
+	public selectOne(table: DatabaseTable): Observable<any> {
+		if (!table) return of(null);
+
 		return this._database.pipe(
 			map(db => from(db.get('SELECT * FROM ' + table.toString()))),
 			concatMap((row: Observable<any>) => row)
+		);
+	}
+
+	public insert(table: DatabaseTable, columns: string[], values: any[]): Observable<number> {
+		if (!table || !columns || !values) return of(null);
+
+		return this._database.pipe(
+			map(db => {
+				const delimiter = ', ';
+				const sql = `INSERT INTO ${table.toString()} (${columns.join(delimiter)}) VALUES (${values.map(_ => '?').join(delimiter)})`;
+				return from(db.execSQL(sql, values));
+			}),
+			concatMap((id: Observable<number>) => id)
 		);
 	}
 }
