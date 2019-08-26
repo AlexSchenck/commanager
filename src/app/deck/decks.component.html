@@ -11,8 +11,13 @@ The ActionBar is the NativeScript common abstraction over the Android ActionBar 
 http://docs.nativescript.org/ui/action-bar
 -->
 <ActionBar title="Commanager" class="action-bar">
+    <!-- Side drawer -->
     <NavigationButton icon="res://baseline_menu_black_48dp" (tap)="cycleDrawer()" *ifAndroid></NavigationButton>
     <ActionItem icon="res://menu" ios.position="left" (tap)="cycleDrawer()" *ifIos></ActionItem>
+
+    <!-- Add Deck button -->
+    <ActionItem icon="res://baseline_add_black_48dp" [nsRouterLink]="['/deck']" *ifAndroid></ActionItem>
+    <ActionItem icon="res://add" ios.position="right" [nsRouterLink]="['/deck']" *ifIos></ActionItem>
 </ActionBar>
 
 <!--
