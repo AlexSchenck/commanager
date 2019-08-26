@@ -1,8 +1,14 @@
-<ActionBar title="Details" class="action-bar"></ActionBar>
-<FlexboxLayout flexDirection="column" class="page">
-    <FlexboxLayout class="m-15">
-        <Label class="h2" [text]="deck.id + '. '"></Label>
-        <Label class="h2" [text]="deck.name"></Label>
-    </FlexboxLayout>
-    <Label class="h4" [text]="deck.role"></Label>
-</FlexboxLayout>
+<ActionBar title="{{title}}" class="action-bar"></ActionBar>
+<StackLayout orientation="vertical" class="page">
+    <StackLayout orientation="vertical" style="margin: 5%">
+        <TextField hint="Name" [text]="deck?.name" maxLength="64" class="input input-border"></TextField>
+        <TextField hint="Commander" [text]="deck?.commander" maxLength="64" class="input input-border"></TextField>
+    </StackLayout>
+    <StackLayout orientation="horizontal">
+        <Label class="h2" text="WWW" width="18%" style="margin-left: 5%"></Label>
+        <Label class="h2" text="UUU" width="18%"></Label>
+        <Label class="h2" text="BBB" width="18%"></Label>
+        <Label class="h2" text="RRR" width="18%"></Label>
+        <Label class="h2" text="GGG" width="18%"></Label>
+    </StackLayout>
+</StackLayout>

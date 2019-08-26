@@ -5,7 +5,6 @@ import { Observable, of } from "rxjs";
 
 import { Color } from './color.enum';
 import { IDeck } from './deck.interface';
-import { DeckService } from "./deck.service";
 
 @Component({
     selector: "ns-deck",
@@ -22,8 +21,7 @@ export class DecksComponent implements OnInit, AfterViewInit {
     private _drawer: RadSideDrawer;
 
     constructor(
-        private _changeDetectorRef: ChangeDetectorRef,
-        private _deckService: DeckService
+        private _changeDetectorRef: ChangeDetectorRef
     ) { }
 
     public ngOnInit(): void {

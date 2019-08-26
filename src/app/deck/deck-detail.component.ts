@@ -1,33 +1,37 @@
-import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
-import { IDeck } from "./deck.interface";
-import { DeckService } from "./deck.service";
-import { Color } from "./color.enum";
+import { DataService } from '../data/data.service';
+import { IDeck } from './deck.interface';
+import { Color } from './color.enum';
 
 @Component({
-    selector: "ns-deck-details",
+    selector: 'ns-deck-details',
     moduleId: module.id,
-    templateUrl: "./deck-detail.component.html"
+    templateUrl: './deck-detail.component.html'
 })
-export class DeckDetailComponent implements OnInit {
-    deck: IDeck;
+export class DeckDetailComponent {
+    public deck: IDeck;
+    public title: string;
 
     constructor(
-        private deckService: DeckService,
-        private route: ActivatedRoute
-    ) { }
+        private _dataService: DataService,
+        private _route: ActivatedRoute
+    ) {
+        const id = +this._route.snapshot.params.id;
 
-    ngOnInit(): void {
-
-        const id = +this.route.snapshot.params.id;
-        //TODO: implement get deck
-        // this.deck = this.deckService.getDeck(id);
-        this.deck = {
-            "id": 1,
-            "name": "Izzet",
-            "commander": "blah",
-            "colorIdentity": Color.Blue
-        };
+        if (id) {
+            this._dataService.getDeck(id).subscribe(deck => {
+                this.deck = {
+                    id: 1,
+                    name: 'Izzet',
+                    commander: 'blah',
+                    colorIdentity: Color.Blue & Color.Red
+                }
+                this.title = this.deck.name;
+            });
+        } else {
+            this.title = 'New Deck';
+        }
     }
 }
