@@ -4,11 +4,12 @@
         <TextField hint="Name" [text]="deck?.name" maxLength="64" class="input input-border"></TextField>
         <TextField hint="Commander" [text]="deck?.commander" maxLength="64" class="input input-border"></TextField>
     </StackLayout>
+    <Label class="h2" text="Color Identity:" style="margin-left: 5%"></Label>
     <StackLayout orientation="horizontal">
-        <Label class="h2" text="WWW" width="18%" style="margin-left: 5%"></Label>
-        <Label class="h2" text="UUU" width="18%"></Label>
-        <Label class="h2" text="BBB" width="18%"></Label>
-        <Label class="h2" text="RRR" width="18%"></Label>
-        <Label class="h2" text="GGG" width="18%"></Label>
+        <CheckBox class="h2" text="W" width="18%" style="margin-left: 5%"></CheckBox>
+        <CheckBox class="h2" text="U" width="18%"></CheckBox>
+        <CheckBox class="h2" text="B" width="18%"></CheckBox>
+        <CheckBox class="h2" text="R" width="18%"></CheckBox>
+        <CheckBox class="h2" text="G" width="18%"></CheckBox>
     </StackLayout>
 </StackLayout>
