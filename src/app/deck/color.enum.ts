@@ -1,4 +1,4 @@
-export const enum Color {
+export enum Color {
     White = 1,
     Blue = 2,
     Black = 4,

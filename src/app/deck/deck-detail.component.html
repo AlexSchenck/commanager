@@ -6,11 +6,11 @@
     </StackLayout>
     <Label class="h3" text="Color Identity:" style="margin-left: 5%"></Label>
     <StackLayout orientation="horizontal">
-        <CheckBox class="h2" text="W" width="18%" style="margin-left: 5%"></CheckBox>
-        <CheckBox class="h2" text="U" width="18%"></CheckBox>
-        <CheckBox class="h2" text="B" width="18%"></CheckBox>
-        <CheckBox class="h2" text="R" width="18%"></CheckBox>
-        <CheckBox class="h2" text="G" width="18%"></CheckBox>
+        <CheckBox class="h2" text="W" checked="{{hasColor(color.White)}}" width="18%" style="margin-left: 5%"></CheckBox>
+        <CheckBox class="h2" text="U" checked="{{hasColor(color.Blue)}}" width="18%"></CheckBox>
+        <CheckBox class="h2" text="B" checked="{{hasColor(color.Black)}}" width="18%"></CheckBox>
+        <CheckBox class="h2" text="R" checked="{{hasColor(color.Red)}}" width="18%"></CheckBox>
+        <CheckBox class="h2" text="G" checked="{{hasColor(color.Green)}}" width="18%"></CheckBox>
     </StackLayout>
     <Label class="h3" text="My Shared Cards:" style="margin-left: 5%; margin-top: 2%"></Label>
 </StackLayout>

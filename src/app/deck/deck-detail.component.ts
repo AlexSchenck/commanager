@@ -14,6 +14,8 @@ export class DeckDetailComponent {
     public deck: IDeck;
     public title: string;
 
+    public get color() { return Color; }
+
     constructor(
         private _dataService: DataService,
         private _route: ActivatedRoute
@@ -26,12 +28,16 @@ export class DeckDetailComponent {
                     id: 1,
                     name: 'Izzet',
                     commander: 'blah',
-                    colorIdentity: Color.Blue & Color.Red
+                    colorIdentity: Color.Blue | Color.Red
                 }
                 this.title = this.deck.name;
             });
         } else {
             this.title = 'New Deck';
         }
+    }
+
+    public hasColor(color: Color): boolean {
+        return this.deck ? !!(this.deck.colorIdentity & color) : false;
     }
 }
