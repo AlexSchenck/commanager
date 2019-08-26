@@ -3,6 +3,7 @@ import { from, Observable, of } from 'rxjs';
 import { concatMap, map } from 'rxjs/operators';
 
 import { DatabaseTable } from './database-table.enum';
+import { IDatabaseWhereCondition } from './database-where-condition.interface';
 
 var Sqlite = require('nativescript-sqlite');
 
@@ -97,12 +98,17 @@ export class DatabaseService {
 		);
 	}
 
-	public selectOne(table: DatabaseTable): Observable<any> {
+	public query(table: DatabaseTable, conditions: IDatabaseWhereCondition[]): Observable<any[]> {
 		if (!table) return of(null);
+		if (!conditions) return this.select(table);
 
 		return this._database.pipe(
-			map(db => from(db.get('SELECT * FROM ' + table.toString()))),
-			concatMap((row: Observable<any>) => row)
+			map(db => { 
+				const selectSql = `SELECT * FROM ${table.toString()} WHERE `
+				const whereSql = conditions.map(condition => `${condition.column} = ${condition.value}`).join(' AND ');
+				return from(db.all(`${selectSql}${whereSql}`));
+			}),
+			concatMap((row: Observable<any[]>) => row)
 		);
 	}
 

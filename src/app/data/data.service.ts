@@ -19,9 +19,10 @@ export class DataService {
     
     // <Get>
     public getDeck(id: number): Observable<IDeck> {
-		return this._databaseService.selectOne(DatabaseTable.Deck).pipe(
-			map(row => this._dataTranslatorService.toDeck(row))
-		);
+        const condition = { column: 'id', value: id };
+        return this._databaseService.query(DatabaseTable.Deck, [condition]).pipe(
+            map(rows => rows && rows.length > 0 ? this._dataTranslatorService.toDeck(rows[0]) : null)
+        );
     }
     
     public getDecks(): Observable<IDeck[]> {
