@@ -1,0 +1,7 @@
+<StackLayout orientation="vertical">
+    <RadAutoCompleteTextView #autocomplete [items]="cardDefinitionTokens" suggestMode="Suggest" displayMode="Plain"></RadAutoCompleteTextView>
+    <StackLayout orientation="horizontal" marginTop="12" horizontalAlignment="right">
+        <Button class="btn btn-secondary" text="Cancel" (tap)="close('cancel')"></Button>
+        <Button class="btn btn-primary" text="Submit" (tap)="close('submit')"></Button>
+    </StackLayout>
+</StackLayout>

@@ -44,11 +44,10 @@ export class DatabaseService {
 	private createDeckTable(db: any): Observable<any> {
 		const sql = `
 		CREATE TABLE IF NOT EXISTS Deck (
-			Id INT NOT NULL,
+			Id INTEGER PRIMARY KEY,
 			Name NVARCHAR(64) NOT NULL,
-			ColorIdentity INT DEFAULT(0),
-			Commander NVARCAR(64) NULL,
-			PRIMARY KEY (Id)
+			ColorIdentity INTEGER DEFAULT(0),
+			Commander NVARCAR(64) NULL
 		)`;
 		return from(db.execSQL(sql)).pipe(map(() => db));
 	}
@@ -56,9 +55,8 @@ export class DatabaseService {
 	private createCardDefinitionTable(db: any): Observable<any> {
 		const sql = `
 		CREATE TABLE IF NOT EXISTS CardDefinition (
-			Id INT NOT NULL,
-			Name NVARCHAR(64) NOT NULL,
-			PRIMARY KEY (Id)
+			Id INTEGER PRIMARY KEY,
+			Name NVARCHAR(64) NOT NULL
 		)`;
 		return from(db.execSQL(sql)).pipe(map(() => db));
 	}
@@ -66,10 +64,9 @@ export class DatabaseService {
 	private createCardInstanceTable(db: any): Observable<any> {
 		const sql = `
 		CREATE TABLE IF NOT EXISTS CardInstance (
-			Id INT NOT NULL,
-			CardDefinitionId INT NOT NULL,
-			CurrentDeckId INT NULL,
-			PRIMARY KEY (Id),
+			Id INTEGER PRIMARY KEY,
+			CardDefinitionId INTEGER NOT NULL,
+			CurrentDeckId INTEGER NULL,
 			FOREIGN KEY (CardDefinitionId) REFERENCES CardDefinition(Id),
 			FOREIGN KEY (CurrentDeckId) REFERENCES Deck(Id)
 		)`;
@@ -79,10 +76,9 @@ export class DatabaseService {
 	private createCatalogTable(db: any): Observable<any> {
 		const sql = `
 		CREATE TABLE IF NOT EXISTS Catalog (
-			Id INT NOT NULL,
-			CardDefinitionId INT NOT NULL,
-			DeckId INT NOT NULL,
-			PRIMARY KEY (Id),
+			Id INTEGER PRIMARY KEY,
+			CardDefinitionId INTEGER NOT NULL,
+			DeckId INTEGER NOT NULL,
 			FOREIGN KEY (CardDefinitionId) REFERENCES CardDefinition(Id),
 			FOREIGN KEY (DeckId) REFERENCES Deck(Id)
 		)`;

@@ -6,6 +6,7 @@ import { DatabaseTable } from '../common/database/database-table.enum';
 import { DatabaseService } from '../common/database/database.service';
 import { IDeck } from '../deck/deck.interface';
 import { DataTranslatorService } from './data-translator.service';
+import { ICardDefinition } from '../card/card-definition.interface';
 
 @Injectable({
 	providedIn: 'root'
@@ -18,6 +19,12 @@ export class DataService {
     }
     
     // <Get>
+    public getCardDefinitions(): Observable<ICardDefinition[]> {
+        return this._databaseService.select(DatabaseTable.CardDefinition).pipe(
+            map(rows => rows.map(row => this._dataTranslatorService.toCardDefinition(row)))
+        );
+    }
+
     public getDeck(id: number): Observable<IDeck> {
         const condition = { column: 'id', value: id };
         return this._databaseService.query(DatabaseTable.Deck, [condition]).pipe(
@@ -33,6 +40,15 @@ export class DataService {
     // </Get>
 
     // <Save>
+    public saveCardDefinition(cardDefinition: ICardDefinition): Observable<ICardDefinition> {
+        if (!cardDefinition) return of(null);
+
+        return this._databaseService.insert(DatabaseTable.CardDefinition, ...this._dataTranslatorService.toDatabaseColumnsAndValues(cardDefinition)).pipe(
+            tap(id => cardDefinition.id = id),
+            map(id => cardDefinition)
+        );    
+    }
+
     public saveDeck(deck: IDeck): Observable<IDeck> {
         if (!deck) return of(null);
 

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 
+import { ICardDefinition } from '../card/card-definition.interface';
 import { IDeck } from '../deck/deck.interface';
 
 @Injectable({
@@ -19,12 +20,19 @@ export class DataTranslatorService {
         return [columns, values];
     }
 
+    public toCardDefinition(databaseRow: any[]): ICardDefinition {
+        return {
+            id: databaseRow[0],
+            name: databaseRow[1]
+        }
+    }
+
     public toDeck(databaseRow: any[]): IDeck {
         return {
-            id: databaseRow[1],
-            name: databaseRow[2],
-            colorIdentity: databaseRow[3],
-            commander: databaseRow[4]
+            id: databaseRow[0],
+            name: databaseRow[1],
+            colorIdentity: databaseRow[2],
+            commander: databaseRow[3]
         };
     }
 }
