@@ -10,6 +10,7 @@ import { IDeck } from '../deck/deck.interface';
 export class PlayService {
     public decks: Observable<IDeck[]>;
     public deck: IDeck;
+    public updates: Map<string, number>;
     
 	constructor(
         private _dataService: DataService
@@ -20,4 +21,5 @@ export class PlayService {
     private loadDecks(): Observable<IDeck[]> {
         return this._dataService.getDecks();
     }
+
 }

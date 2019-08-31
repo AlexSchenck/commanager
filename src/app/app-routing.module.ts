@@ -8,6 +8,7 @@ import { DeckDetailComponent } from './deck/deck-detail.component';
 import { ItemsComponent } from './item/items.component';
 import { ItemDetailComponent } from './item/item-detail.component';
 import { PlayComponent } from './play/play.component';
+import { PlayConfirmComponent } from './play/play-confirm.component';
 
 const routes: Routes = [
     { path: '', redirectTo: '/decks', pathMatch: 'full' },
@@ -18,6 +19,7 @@ const routes: Routes = [
     { path: 'item/:id', component: ItemDetailComponent },
     { path: 'items', component: ItemsComponent },
     { path: 'play/:id', component: PlayComponent },
+    { path: 'playConfirm', component: PlayConfirmComponent }
 ];
 
 @NgModule({

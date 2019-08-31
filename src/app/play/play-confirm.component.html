@@ -1,0 +1,14 @@
+<ActionBar title="Confirm Changes" class="action-bar">
+        <Button class="btn btn-default" text="Submit" horizontalAlignment="right" (tap)="updateCards()"></Button>
+</ActionBar>
+
+<GridLayout class="page">
+    <ListView [items]="updates" class="list-group">
+        <ng-template let-changeItem="item" let-i="index">
+            <DockLayout orientation="horizontal" class="list-group-item">
+                <Label [text]="changeItem.cardId" dock="top" class="list-group-item"></Label>
+                <Label [text]="changeItem.deckId" dock="top" class="list-group-item"></Label>
+            </DockLayout>
+        </ng-template>
+    </ListView>
+</GridLayout>

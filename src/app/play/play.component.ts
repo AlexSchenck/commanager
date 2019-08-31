@@ -26,6 +26,7 @@ export class PlayComponent implements OnInit {
     ) { }
 
     public ngOnInit(): void {
+
         const id = +this._route.snapshot.params.id;
 
         // this.decks = this.deckService.decks;
@@ -36,16 +37,16 @@ export class PlayComponent implements OnInit {
             "colorIdentity": Color.White
         }
         this.cardsInDeck = [{
-            id: 1,
+            id: 112123,
             name: 'Sol Ring'
         }, {
-            id: 2,
+            id: 2222,
             name: 'Lightning Greaves'
         }, {
-            id: 3,
+            id: 33553,
             name: 'Alex of Clan Smelly'
         }, {
-            id: 4,
+            id: 45612,
             name: 'Command Tower'
         }];
         this.tempDecksForDropDown = [{
@@ -66,6 +67,12 @@ export class PlayComponent implements OnInit {
             }
         }];
 
+        this._playService.updates = new Map();
+        for (let i in this.cardsInDeck) {
+            this._playService.updates.set(this.cardsInDeck[i].id.toString(), 0)
+        }
+
+
         // https://github.com/NativeScript/NativeScript/issues/1677
         // Need to add to strings to each dropdown
         // for (let i = 0; i < this.tempDecksForDropDown.length; i++) {
@@ -84,7 +91,7 @@ export class PlayComponent implements OnInit {
 
     public selectedIndexChanged(args) {
         let picker = <ListPicker>args.object;
-        console.log("picker selection: " + picker.selectedIndex);
+        this._playService.updates.set(this.cardsInDeck[args.object.listIndex].id.toString(), picker.selectedIndex);
     }
 
 }
