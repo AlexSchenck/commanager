@@ -6,8 +6,7 @@ import { Color } from "../deck/color.enum"
 import { PlayService } from "./play.service";
 import { IDeck } from "../deck/deck.interface";
 import { ActivatedRoute } from "@angular/router";
-import { ICard } from "../card/deck.interface";
-
+import { ICardDefinition } from "../card/card-definition.interface";
 
 @Component({
     selector: "ns-play",
@@ -17,7 +16,7 @@ import { ICard } from "../card/deck.interface";
 export class PlayComponent implements OnInit {
     public decks: Observable<IDeck[]>;
     public deck: IDeck;
-    public cardsInDeck: ICard[];
+    public cardsInDeck: ICardDefinition[];
     public tempDecksForDropDown: any[];
     public tempToStringForDropDown: any[];
 
