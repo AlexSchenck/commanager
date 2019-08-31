@@ -12,6 +12,7 @@ import { DeckDetailComponent } from './deck/deck-detail.component';
 import { ItemsComponent } from './item/items.component';
 import { ItemDetailComponent } from './item/item-detail.component';
 import { PlayComponent } from "./play/play.component"
+import { PlayConfirmComponent } from "./play/play-confirm.component";
 
 // Uncomment and add to NgModule imports if you need to use two-way binding
 // import { NativeScriptFormsModule } from "nativescript-angular/forms";
@@ -37,7 +38,8 @@ import { PlayComponent } from "./play/play.component"
         IfIosDirective,
         ItemsComponent,
         ItemDetailComponent,
-        PlayComponent
+        PlayComponent,
+        PlayConfirmComponent
     ],
     providers: [],
     schemas: [
