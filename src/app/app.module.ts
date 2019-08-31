@@ -7,6 +7,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { IfAndroidDirective } from './common/directives/android-platform.directive';
 import { IfIosDirective } from './common/directives/ios-platform.directive';
+import { CardsComponent } from "./card/cards.component";
 import { DecksComponent } from './deck/decks.component';
 import { DeckDetailComponent } from './deck/deck-detail.component';
 import { ItemsComponent } from './item/items.component';
@@ -31,6 +32,7 @@ import { PlayComponent } from "./play/play.component"
     ],
     declarations: [
         AppComponent,
+        CardsComponent,
         DecksComponent,
         DeckDetailComponent,
         IfAndroidDirective,

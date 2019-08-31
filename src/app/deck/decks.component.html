@@ -12,8 +12,8 @@ http://docs.nativescript.org/ui/action-bar
 -->
 <ActionBar title="Commanager" class="action-bar">
     <!-- Side drawer -->
-    <NavigationButton icon="res://baseline_menu_black_48dp" (tap)="cycleDrawer()" *ifAndroid></NavigationButton>
-    <ActionItem icon="res://menu" ios.position="left" (tap)="cycleDrawer()" *ifIos></ActionItem>
+    <NavigationButton icon="res://baseline_menu_black_48dp" (tap)="toggleDrawer()" *ifAndroid></NavigationButton>
+    <ActionItem icon="res://menu" ios.position="left" (tap)="toggleDrawer()" *ifIos></ActionItem>
 
     <!-- Add Deck button -->
     <ActionItem icon="res://baseline_add_black_48dp" [nsRouterLink]="['/deck']" *ifAndroid></ActionItem>
@@ -31,19 +31,17 @@ core theme, such as p-20, btn, h2, and list-group. You can view a full list of t
 class names available for styling your app at https://docs.nativescript.org/ui/theme.
 -->
 <RadSideDrawer>
-    <GridLayout tkDrawerContent rows="56, *" class="sideStackLayout">
-        <StackLayout class="sideStackLayout">
-            <!-- Side drawer buttons -->
+    <StackLayout tkDrawerContent orientation="vertical" class="sideMenu">
+        <StackLayout [nsRouterLink]="['/cards']" class="sideMenuItem">
+            <Label text="Manage Shared Cards" class="sideMenuLabel" fontSize="16"></Label>
         </StackLayout>
-    </GridLayout>
-    <GridLayout class="page" tkMainContent>
-        <ListView [items]="deckList" class="list-group">
-            <ng-template let-deck="item">
-                <GridLayout orientation="horizontal" class="list-group-item">
-                    <Label [nsRouterLink]="['/deck', deck.id]" [text]="deck.name" class="list-group-item"></Label>
-                    <Button [nsRouterLink]="['/play', deck.id]" class="btn btn-primary" text="Play" horizontalAlignment="right"></Button>
-                </GridLayout>
-            </ng-template>
-        </ListView>
-    </GridLayout>
+    </StackLayout>
+    <ListView tkMainContent [items]="deckList" class="page list-group">
+        <ng-template let-deck="item">
+            <GridLayout orientation="horizontal" class="list-group-item">
+                <Label [nsRouterLink]="['/deck', deck.id]" [text]="deck.name" class="list-group-item"></Label>
+                <Button [nsRouterLink]="['/play', deck.id]" class="btn btn-primary" text="Play" horizontalAlignment="right"></Button>
+            </GridLayout>
+        </ng-template>
+    </ListView>
 </RadSideDrawer>

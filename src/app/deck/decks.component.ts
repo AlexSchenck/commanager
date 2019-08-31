@@ -7,7 +7,7 @@ import { Color } from './color.enum';
 import { IDeck } from './deck.interface';
 
 @Component({
-    selector: "ns-deck",
+    selector: "ns-decks",
     moduleId: module.id,
     styleUrls: ['decks.component.css'],
     templateUrl: "./decks.component.html"
@@ -46,7 +46,7 @@ export class DecksComponent implements OnInit, AfterViewInit {
         this._changeDetectorRef.detectChanges();
     }
 
-    public cycleDrawer(): void {
+    public toggleDrawer(): void {
         // Close the drawer if it's open, open it if it's closed
         this._drawer[this._drawer.getIsOpen() ? 'closeDrawer' : 'showDrawer']();
     }
