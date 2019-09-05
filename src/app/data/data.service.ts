@@ -2,11 +2,12 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
+import { ICardDefinition } from '../card/card-definition.interface';
+import { ICardInstance } from '../card/card-instance.interface';
 import { DatabaseTable } from '../common/database/database-table.enum';
 import { DatabaseService } from '../common/database/database.service';
 import { IDeck } from '../deck/deck.interface';
 import { DataTranslatorService } from './data-translator.service';
-import { ICardDefinition } from '../card/card-definition.interface';
 
 @Injectable({
 	providedIn: 'root'
@@ -46,6 +47,15 @@ export class DataService {
         return this._databaseService.insert(DatabaseTable.CardDefinition, ...this._dataTranslatorService.toDatabaseColumnsAndValues(cardDefinition)).pipe(
             tap(id => cardDefinition.id = id),
             map(id => cardDefinition)
+        );    
+    }
+
+    public saveCardInstance(cardInstance: ICardInstance): Observable<ICardInstance> {
+        if (!cardInstance) return of(null);
+
+        return this._databaseService.insert(DatabaseTable.CardInstance, ...this._dataTranslatorService.toDatabaseColumnsAndValues(cardInstance)).pipe(
+            tap(id => cardInstance.id = id),
+            map(id => cardInstance)
         );    
     }
 

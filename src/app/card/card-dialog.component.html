@@ -1,7 +1,11 @@
 <StackLayout orientation="vertical">
-    <RadAutoCompleteTextView #autocomplete [items]="cardDefinitionTokens" suggestMode="Suggest" displayMode="Plain"></RadAutoCompleteTextView>
-    <StackLayout orientation="horizontal" marginTop="12" horizontalAlignment="right">
+    <RadAutoCompleteTextView class="cardInput" #cardAutoComplete [items]="cardDefinitionTokens" completionMode="Contains" suggestMode="Suggest" (textChanged)="setSubmitEnabled($event)" hint="Card Name*"></RadAutoCompleteTextView>
+    <StackLayout class="deckLayout" orientation="horizontal">
+        <Label class="deckLabel" text="Current Deck"></Label>
+        <ListPicker #deckListPicker class="deckPicker" [items]="deckItems"></ListPicker>    
+    </StackLayout>
+    <StackLayout class="buttonLayout" orientation="horizontal" horizontalAlignment="right">
         <Button class="btn btn-secondary" text="Cancel" (tap)="close('cancel')"></Button>
-        <Button class="btn btn-primary" text="Submit" (tap)="close('submit')"></Button>
+        <Button class="btn btn-primary" text="Submit" (tap)="close('submit')" [isEnabled]="isSubmitEnabled"></Button>
     </StackLayout>
 </StackLayout>

@@ -1,0 +1,22 @@
+.buttonLayout {
+    margin-top: 1%;
+}
+
+.cardInput {
+    margin: 2% 2% 1% 2%;
+}
+
+.deckLabel {
+    font-size: 16;
+    margin-right: 5%;
+    vertical-align: center;
+    width: 25%;
+}
+
+.deckLayout {
+    margin: 1% 2%;
+}
+
+.deckPicker {
+    width: 70%;
+}
