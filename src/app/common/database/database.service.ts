@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { from, Observable, of } from 'rxjs';
 import { concatMap, map } from 'rxjs/operators';
 
+import { IDatabaseJoin } from './database-join.interface';
 import { DatabaseTable } from './database-table.enum';
 import { IDatabaseWhereCondition } from './database-where-condition.interface';
 
@@ -85,11 +86,22 @@ export class DatabaseService {
 		return from(db.execSQL(sql)).pipe(map(() => db));
 	}
 
-	public select(table: DatabaseTable): Observable<any[]> {
+	public select(table: DatabaseTable, joins?: IDatabaseJoin[]): Observable<any[]> {
 		if (!table) return of(null);
 
 		return this._database.pipe(
-			map(db => from(db.all('SELECT * FROM ' + table.toString()))),
+			map(db => {
+				const selectSql = `SELECT * FROM ${table.toString()}`;
+				if (!joins) return from(db.all(selectSql));
+
+				const joinSql = joins.map(join => {
+					const leftTable = join.leftTable.toString();
+					const rightTable = join.rightTable.toString();
+					return ` LEFT JOIN ${rightTable} ON ${leftTable}.${join.leftColumnName} = ${rightTable}.${join.rightColumnName}`;
+				}).join('');
+
+				return from(db.all(`${selectSql}${joinSql}`));
+			}),
 			concatMap((rows: Observable<any[]>) => rows)
 		);
 	}
@@ -100,7 +112,7 @@ export class DatabaseService {
 
 		return this._database.pipe(
 			map(db => { 
-				const selectSql = `SELECT * FROM ${table.toString()} WHERE `
+				const selectSql = `SELECT * FROM ${table.toString()} WHERE `;
 				const whereSql = conditions.map(condition => `${condition.column} = ${condition.value}`).join(' AND ');
 				return from(db.all(`${selectSql}${whereSql}`));
 			}),

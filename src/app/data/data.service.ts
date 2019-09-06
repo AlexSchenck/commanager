@@ -4,6 +4,7 @@ import { map, tap } from 'rxjs/operators';
 
 import { ICardDefinition } from '../card/card-definition.interface';
 import { ICardInstance } from '../card/card-instance.interface';
+import { ICardInstanceDetail } from '../card/card-instance-detail.interface';
 import { DatabaseTable } from '../common/database/database-table.enum';
 import { DatabaseService } from '../common/database/database.service';
 import { IDeck } from '../deck/deck.interface';
@@ -23,6 +24,26 @@ export class DataService {
     public getCardDefinitions(): Observable<ICardDefinition[]> {
         return this._databaseService.select(DatabaseTable.CardDefinition).pipe(
             map(rows => rows.map(row => this._dataTranslatorService.toCardDefinition(row)))
+        );
+    }
+
+    public getCardInstanceDetails(): Observable<ICardInstanceDetail[]> {
+        const joins = [
+            {
+                leftTable: DatabaseTable.CardInstance,
+                leftColumnName: 'cardDefinitionId',
+                rightTable: DatabaseTable.CardDefinition,
+                rightColumnName: 'id'
+            },
+            {
+                leftTable: DatabaseTable.CardInstance,
+                leftColumnName: 'currentDeckId',
+                rightTable: DatabaseTable.Deck,
+                rightColumnName: 'id'
+            }
+        ];
+        return this._databaseService.select(DatabaseTable.CardInstance, joins).pipe(
+            map(rows => rows.map(row => this._dataTranslatorService.toCardInstanceDetail(row)))
         );
     }
 

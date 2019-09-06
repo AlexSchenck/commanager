@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { ICardDefinition } from '../card/card-definition.interface';
+import { ICardInstanceDetail } from '../card/card-instance-detail.interface';
 import { IDeck } from '../deck/deck.interface';
 
 @Injectable({
@@ -25,6 +26,16 @@ export class DataTranslatorService {
             id: databaseRow[0],
             name: databaseRow[1]
         }
+    }
+
+    public toCardInstanceDetail(databaseRow: any[]): ICardInstanceDetail {
+        return {
+            id: databaseRow[0],
+            cardDefinitionId: databaseRow[1],
+            currentDeckId: databaseRow[2],
+            cardDefinitionName: databaseRow[4],
+            currentDeckName: databaseRow[6]
+        };
     }
 
     public toDeck(databaseRow: any[]): IDeck {

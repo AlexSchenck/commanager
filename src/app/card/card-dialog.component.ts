@@ -9,8 +9,8 @@ import { ListPicker } from 'tns-core-modules/ui/list-picker/list-picker';
 
 import { DataService } from '../data/data.service';
 import { IDeck } from '../deck/deck.interface';
-import { ICardInstance } from './card-instance.interface';
 import { ICardDefinition } from './card-definition.interface';
+import { ICardInstanceDetail } from './card-instance-detail.interface';
 
 @Component({
     selector: 'ns-card-dialog',
@@ -19,8 +19,8 @@ import { ICardDefinition } from './card-definition.interface';
 })
 export class CardDialogComponent implements OnDestroy {
     public cardDefinitionTokens: ObservableArray<TokenModel>;
+    public cardInstance: ICardInstanceDetail;
     public deckItems: string[];
-    public cardInstance: ICardInstance;
     public isSubmitEnabled: boolean;
 
     private _cardDefinitions: ICardDefinition[];
