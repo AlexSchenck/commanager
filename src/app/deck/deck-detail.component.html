@@ -1,16 +1,28 @@
-<ActionBar title="{{title}}" class="action-bar"></ActionBar>
-<StackLayout orientation="vertical" class="page">
-    <StackLayout orientation="vertical" style="margin: 2% 5%">
-        <TextField hint="Name" [text]="deck?.name" maxLength="64" class="input input-border"></TextField>
-        <TextField hint="Commander" [text]="deck?.commander" maxLength="64" class="input input-border"></TextField>
+<ActionBar class="action-bar" title="{{title}}"></ActionBar>
+
+<StackLayout class="page" orientation="vertical">
+    <StackLayout class="text-field-layout" orientation="vertical">
+        <TextField class="input input-border" hint="Name" [text]="deck?.name" maxLength="64" ></TextField>
+        <TextField class="input input-border" hint="Commander" [text]="deck?.commander" maxLength="64"></TextField>
     </StackLayout>
-    <Label class="h3" text="Color Identity:" style="margin-left: 5%"></Label>
-    <StackLayout orientation="horizontal">
-        <CheckBox class="h2" text="W" checked="{{hasColor(color.White)}}" width="18%" style="margin-left: 5%"></CheckBox>
-        <CheckBox class="h2" text="U" checked="{{hasColor(color.Blue)}}" width="18%"></CheckBox>
-        <CheckBox class="h2" text="B" checked="{{hasColor(color.Black)}}" width="18%"></CheckBox>
-        <CheckBox class="h2" text="R" checked="{{hasColor(color.Red)}}" width="18%"></CheckBox>
-        <CheckBox class="h2" text="G" checked="{{hasColor(color.Green)}}" width="18%"></CheckBox>
+    <Label class="h3 color-label" text="Color Identity:"></Label>
+    <StackLayout class="checkbox-layout" orientation="horizontal">
+        <CheckBox class="h2 color-checkbox" text="W" [checked]="hasColor(color.White)"></CheckBox>
+        <CheckBox class="h2 color-checkbox" text="U" [checked]="hasColor(color.Blue)"></CheckBox>
+        <CheckBox class="h2 color-checkbox" text="B" [checked]="hasColor(color.Black)"></CheckBox>
+        <CheckBox class="h2 color-checkbox" text="R" [checked]="hasColor(color.Red)"></CheckBox>
+        <CheckBox class="h2 color-checkbox" text="G" [checked]="hasColor(color.Green)"></CheckBox>
     </StackLayout>
-    <Label class="h3" text="My Shared Cards:" style="margin-left: 5%; margin-top: 2%"></Label>
+    <Label class="h3 card-label" text="My Shared Cards:"></Label>
+    <ListView [items]="cards" class="page list-group">
+        <ng-template let-card="item">
+            <StackLayout orientation="vertical" class="list-group-item">
+                <Label [text]="card.name" class="list-group-item"></Label>
+            </StackLayout>
+        </ng-template>
+    </ListView>
+    <StackLayout orientation="horizontal" horizontalAlignment="right">
+        <Button class="btn btn-secondary" text="Cancel" (tap)="close('cancel')"></Button>
+        <Button class="btn btn-primary" text="Submit" (tap)="close('submit')"></Button>
+    </StackLayout>
 </StackLayout>
