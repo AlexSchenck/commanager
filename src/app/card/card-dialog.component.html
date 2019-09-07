@@ -5,7 +5,7 @@
         <ListPicker #deckListPicker class="deckPicker" [items]="deckItems"></ListPicker>    
     </StackLayout>
     <StackLayout class="buttonLayout" orientation="horizontal" horizontalAlignment="right">
-        <Button class="btn btn-secondary" text="Cancel" (tap)="close('cancel')"></Button>
+        <Button class="btn btn-outline" text="Cancel" (tap)="close('cancel')"></Button>
         <Button class="btn btn-primary" text="Submit" (tap)="close('submit')" [isEnabled]="isSubmitEnabled"></Button>
     </StackLayout>
 </StackLayout>

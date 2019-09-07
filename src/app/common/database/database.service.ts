@@ -133,6 +133,15 @@ export class DatabaseService {
 		);
 	}
 
+	public update(table: DatabaseTable, columns: string[], values: any[], id: number): Observable<number> {
+		if (!table || !columns || !values) return of(null);
+
+		return this._database.pipe(
+			map(db => from(db.execSQL(`UPDATE ${table.toString()} SET ${columns.map(column => `${column} = ?`).join(', ')} WHERE Id = ${id}`, values))),
+			concatMap((rowsAffected: Observable<number>) => rowsAffected)
+		);
+	}
+
 	public delete(table: DatabaseTable, id: number): Observable<number> {
 		if (!table || !id) return of(null);
 

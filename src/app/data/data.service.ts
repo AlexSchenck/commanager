@@ -7,6 +7,7 @@ import { ICardInstance } from '../card/card-instance.interface';
 import { ICardInstanceDetail } from '../card/card-instance-detail.interface';
 import { DatabaseTable } from '../common/database/database-table.enum';
 import { DatabaseService } from '../common/database/database.service';
+import { IRecord } from '../common/database/record.interface';
 import { IDeck } from '../deck/deck.interface';
 import { DataTranslatorService } from './data-translator.service';
 
@@ -65,7 +66,7 @@ export class DataService {
     public saveCardDefinition(cardDefinition: ICardDefinition): Observable<ICardDefinition> {
         if (!cardDefinition) return of(null);
 
-        return this._databaseService.insert(DatabaseTable.CardDefinition, ...this._dataTranslatorService.toDatabaseColumnsAndValues(cardDefinition)).pipe(
+        return this.save(DatabaseTable.CardDefinition, cardDefinition, ...this._dataTranslatorService.toDatabaseColumnsAndValues(cardDefinition)).pipe(
             tap(id => cardDefinition.id = id),
             map(id => cardDefinition)
         );    
@@ -74,7 +75,7 @@ export class DataService {
     public saveCardInstance(cardInstance: ICardInstance): Observable<ICardInstance> {
         if (!cardInstance) return of(null);
 
-        return this._databaseService.insert(DatabaseTable.CardInstance, ...this._dataTranslatorService.toDatabaseColumnsAndValues(cardInstance)).pipe(
+        return this.save(DatabaseTable.CardInstance, cardInstance, ...this._dataTranslatorService.toDatabaseColumnsAndValues(cardInstance)).pipe(
             tap(id => cardInstance.id = id),
             map(id => cardInstance)
         );    
@@ -83,10 +84,18 @@ export class DataService {
     public saveDeck(deck: IDeck): Observable<IDeck> {
         if (!deck) return of(null);
 
-        return this._databaseService.insert(DatabaseTable.Deck, ...this._dataTranslatorService.toDatabaseColumnsAndValues(deck)).pipe(
+        return this.save(DatabaseTable.Deck, deck, ...this._dataTranslatorService.toDatabaseColumnsAndValues(deck)).pipe(
             tap(id => deck.id = id),
             map(id => deck)
         );
+    }
+
+    private save(table: DatabaseTable, record: IRecord, columns: string[], values: any[]): Observable<number> {
+        // Insert if id is null, update otherwise
+        // Returns new id if insert, # of rows affected if update
+        return record.id ?
+            this._databaseService.update(table, columns, values, record.id) : 
+            this._databaseService.insert(table, columns, values);
     }
     // </Save>
 

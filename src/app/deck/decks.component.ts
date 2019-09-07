@@ -1,44 +1,35 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, AfterViewInit } from "@angular/core";
-import { RadSideDrawer } from "nativescript-ui-sidedrawer";
+import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { RadSideDrawer } from 'nativescript-ui-sidedrawer';
 import { RadSideDrawerComponent } from 'nativescript-ui-sidedrawer/angular';
-import { Observable, of } from "rxjs";
+import { Subscription } from 'rxjs';
+import { ObservableArray } from 'tns-core-modules/data/observable-array/observable-array';
 
-import { Color } from './color.enum';
+import { DataService } from '../data/data.service';
 import { IDeck } from './deck.interface';
 
 @Component({
-    selector: "ns-decks",
+    selector: 'ns-decks',
     moduleId: module.id,
     styleUrls: ['decks.component.css'],
-    templateUrl: "./decks.component.html"
+    templateUrl: './decks.component.html'
 })
-export class DecksComponent implements OnInit, AfterViewInit {
-    @ViewChild(RadSideDrawerComponent, { static: false }) public drawerComponent;
+export class DecksComponent implements AfterViewInit {
+    public decks: ObservableArray<IDeck>;
 
-    public decks: Observable<IDeck[]>;
-    public deckList: IDeck[];
+    @ViewChild(RadSideDrawerComponent, { static: false }) public drawerComponent: RadSideDrawerComponent;
 
     private _drawer: RadSideDrawer;
+    private _subscriptions: Subscription[];
 
     constructor(
-        private _changeDetectorRef: ChangeDetectorRef
-    ) { }
+        private _changeDetectorRef: ChangeDetectorRef,
+        private _dataService: DataService
+    ) {
+        this._subscriptions = [];
 
-    public ngOnInit(): void {
-        // this.decks = this.deckService.decks;
-        var a : IDeck[] =  [{
-            "id": 1,
-            "name": "Izzet",
-            "commander": "blah",
-            "colorIdentity": Color.Blue
-        }, {
-            "id": 2,
-            "name": "Artifacts",
-            "commander": "Blah 2",
-            "colorIdentity": Color.White
-        }];
-        this.deckList = a;
-        this.decks = of(a);
+        this._subscriptions.push(this._dataService.getDecks().subscribe(decks => {
+            this.decks = new ObservableArray(decks);
+        }));
     }
 
     public ngAfterViewInit(): void {

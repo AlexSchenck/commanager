@@ -11,7 +11,7 @@
                 <Label [text]="card.cardDefinitionName"></Label>
                 <Label text="Current Deck: {{card.currentDeckName || 'None'}}"></Label>
             </StackLayout>
-            <Button class="btn btn-secondary" text="Delete" (tap)="deleteCard(card)"></Button>
+            <Button class="btn btn-outline" text="Delete" (tap)="deleteCard(card)"></Button>
         </StackLayout>
     </ng-template>
 </ListView>

@@ -13,7 +13,7 @@
             <Label text="Manage Shared Cards" class="sideMenuLabel"></Label>
         </StackLayout>
     </StackLayout>
-    <ListView tkMainContent [items]="deckList" class="page list-group">
+    <ListView tkMainContent [items]="decks" class="page list-group">
         <ng-template let-deck="item">
             <GridLayout orientation="horizontal" class="list-group-item">
                 <Label [nsRouterLink]="['/deck', deck.id]" [text]="deck.name" class="list-group-item"></Label>
