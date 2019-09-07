@@ -1,5 +1,6 @@
-import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { CheckBox } from '@nstudio/nativescript-checkbox';
 import { RouterExtensions } from 'nativescript-angular/router';
 import { Subscription } from 'rxjs';
 import { ObservableArray } from 'tns-core-modules/data/observable-array/observable-array';
@@ -25,6 +26,7 @@ export class DeckDetailComponent implements OnDestroy {
 
     @ViewChild('nameTextField', { static: false }) nameTextField: ElementRef<TextField>;
     @ViewChild('commanderTextField', { static: false }) commanderTextField: ElementRef<TextField>;
+    @ViewChildren('colorCheckBox') checkBoxFields: QueryList<ElementRef<CheckBox>>;
 
     private _subscriptions: Subscription[]
 
@@ -58,14 +60,31 @@ export class DeckDetailComponent implements OnDestroy {
     }
 
     public close(result: 'submit' | 'cancel' | 'delete'): void {
+        if (result === 'cancel') {
+            this.navigateToDeckPage();
+            return;
+        }
+
+        let colorIdentity: Color = null;
+        this.checkBoxFields.forEach(checkboxRef => {
+            const checkbox = checkboxRef.nativeElement
+            if (!checkbox.checked) return;
+
+            // Add the color to the color identity if the checkbox is checked
+            const colorValue: Color = +checkbox.id;
+            colorIdentity = colorIdentity ? colorIdentity |= colorValue : colorValue;
+        });
+
         const deck: IDeck = {
             id: this.deck ? this.deck.id : null,
             name: this.nameTextField.nativeElement.text,
             commander: this.commanderTextField.nativeElement.text,
-            // TODO COLORS
+            colorIdentity
         };
-        this._subscriptions.push(this._dataService.saveDeck(deck).subscribe(deck => {
-            this._routerExtensions.navigateByUrl('decks');
-        }));
+        this._subscriptions.push(this._dataService.saveDeck(deck).subscribe(_ => this.navigateToDeckPage()));
+    }
+
+    private navigateToDeckPage(): void {
+        this._routerExtensions.navigateByUrl('decks')
     }
 }
