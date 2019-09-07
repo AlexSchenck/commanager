@@ -63,7 +63,7 @@ export class DeckDetailComponent implements OnDestroy {
     }
 
     public setSubmitEnabled(eventArgs: any): void {
-        this.isSubmitEnabled = !!eventArgs.text;
+        this.isSubmitEnabled = !!eventArgs.value;
     }
 
     public hasColor(color: Color): boolean {
@@ -85,7 +85,7 @@ export class DeckDetailComponent implements OnDestroy {
                     colorIdentity = colorIdentity ? colorIdentity |= colorValue : colorValue;
                 });
 
-                this._dataService.saveDeck({
+                resultObs = this._dataService.saveDeck({
                     id: this.deck ? this.deck.id : null,
                     name: this.nameTextField.nativeElement.text,
                     commander: this.commanderTextField.nativeElement.text,
