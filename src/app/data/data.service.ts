@@ -107,5 +107,9 @@ export class DataService {
     public deleteCardInstance(id: number): Observable<number> {
         return this._databaseService.delete(DatabaseTable.CardInstance, id);
     }
+
+    public deleteDeck(id: number): Observable<number> {
+        return this._databaseService.delete(DatabaseTable.Deck, id);
+    }
     // </Delete>
 }

@@ -2,7 +2,7 @@ import { Component, ElementRef, OnDestroy, QueryList, ViewChild, ViewChildren } 
 import { ActivatedRoute } from '@angular/router';
 import { CheckBox } from '@nstudio/nativescript-checkbox';
 import { RouterExtensions } from 'nativescript-angular/router';
-import { Subscription } from 'rxjs';
+import { of, Subscription } from 'rxjs';
 import { ObservableArray } from 'tns-core-modules/data/observable-array/observable-array';
 import { TextField } from 'tns-core-modules/ui/text-field/text-field';
 
@@ -20,6 +20,8 @@ import { IDeck } from './deck.interface';
 export class DeckDetailComponent implements OnDestroy {
     public cards: ObservableArray<ICardDefinition>;
     public deck: IDeck;
+    public isDeleteEnabled: boolean;
+    public isSubmitEnabled: boolean;
     public title: string;
 
     public get color() { return Color; }
@@ -35,6 +37,8 @@ export class DeckDetailComponent implements OnDestroy {
         private _route: ActivatedRoute,
         private _routerExtensions: RouterExtensions
     ) {
+        this.isDeleteEnabled = false;
+        this.isSubmitEnabled = false;
         this.title = 'New Deck';
         this._subscriptions = [];
 
@@ -44,6 +48,9 @@ export class DeckDetailComponent implements OnDestroy {
 
         const id = +this._route.snapshot.params.id;
         if (!id) return;
+
+        this.isDeleteEnabled = true;
+        this.isSubmitEnabled = true;
 
         this._subscriptions.push(this._dataService.getDeck(id).subscribe(deck => {
             this.deck = deck;
@@ -55,33 +62,42 @@ export class DeckDetailComponent implements OnDestroy {
         this._subscriptions.forEach(subscription => subscription.unsubscribe());
     }
 
+    public setSubmitEnabled(eventArgs: any): void {
+        this.isSubmitEnabled = !!eventArgs.text;
+    }
+
     public hasColor(color: Color): boolean {
         return this.deck ? !!(this.deck.colorIdentity & color) : false;
     }
 
     public close(result: 'submit' | 'cancel' | 'delete'): void {
-        if (result === 'cancel') {
-            this.navigateToDeckPage();
-            return;
+        let resultObs = of(null);
+
+        switch (result) {
+            case 'submit':
+                let colorIdentity: Color = null;
+                this.checkBoxFields.forEach(checkboxRef => {
+                    const checkbox = checkboxRef.nativeElement;
+                    if (!checkbox.checked) return;
+        
+                    // Add the color to the color identity if the checkbox is checked
+                    const colorValue: Color = +checkbox.id;
+                    colorIdentity = colorIdentity ? colorIdentity |= colorValue : colorValue;
+                });
+
+                this._dataService.saveDeck({
+                    id: this.deck ? this.deck.id : null,
+                    name: this.nameTextField.nativeElement.text,
+                    commander: this.commanderTextField.nativeElement.text,
+                    colorIdentity
+                });
+                break;
+            case 'delete':
+                resultObs = this._dataService.deleteDeck(this.deck.id);
+                break;
         }
 
-        let colorIdentity: Color = null;
-        this.checkBoxFields.forEach(checkboxRef => {
-            const checkbox = checkboxRef.nativeElement
-            if (!checkbox.checked) return;
-
-            // Add the color to the color identity if the checkbox is checked
-            const colorValue: Color = +checkbox.id;
-            colorIdentity = colorIdentity ? colorIdentity |= colorValue : colorValue;
-        });
-
-        const deck: IDeck = {
-            id: this.deck ? this.deck.id : null,
-            name: this.nameTextField.nativeElement.text,
-            commander: this.commanderTextField.nativeElement.text,
-            colorIdentity
-        };
-        this._subscriptions.push(this._dataService.saveDeck(deck).subscribe(_ => this.navigateToDeckPage()));
+        this._subscriptions.push(resultObs.subscribe(_ => this.navigateToDeckPage()));
     }
 
     private navigateToDeckPage(): void {

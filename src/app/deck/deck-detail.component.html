@@ -2,7 +2,7 @@
 
 <StackLayout class="page" orientation="vertical">
     <StackLayout class="text-field-layout" orientation="vertical">
-        <TextField #nameTextField class="input input-border" hint="Name*" [text]="deck?.name" maxLength="64" ></TextField>
+        <TextField #nameTextField class="input input-border" hint="Name*" [text]="deck?.name" maxLength="64" (textChanged)="setSubmitEnabled($event)"></TextField>
         <TextField #commanderTextField class="input input-border" hint="Commander" [text]="deck?.commander" maxLength="64"></TextField>
     </StackLayout>
     <Label class="h3 color-label" text="Color Identity:"></Label>
@@ -22,8 +22,8 @@
         </ng-template>
     </ListView>
     <StackLayout orientation="horizontal" horizontalAlignment="right">
-        <Button class="btn btn-outline" text="Delete" (tap)="close('delete')"></Button>
+        <Button class="btn btn-outline" text="Delete" (tap)="close('delete')" [isEnabled]="isDeleteEnabled"></Button>
         <Button class="btn btn-outline" text="Cancel" (tap)="close('cancel')"></Button>
-        <Button class="btn btn-primary" text="Submit" (tap)="close('submit')"></Button>
+        <Button class="btn btn-primary" text="Submit" (tap)="close('submit')" [isEnabled]="isSubmitEnabled"></Button>
     </StackLayout>
 </StackLayout>
