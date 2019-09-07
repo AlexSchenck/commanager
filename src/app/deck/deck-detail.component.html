@@ -7,18 +7,18 @@
     </StackLayout>
     <Label class="h3 color-label" text="Color Identity:"></Label>
     <StackLayout class="checkbox-layout" orientation="horizontal">
-        <CheckBox id={{color.White}} #colorCheckBox class="color-checkbox" text="W" [checked]="hasColor(color.White)"></CheckBox>
-        <CheckBox id={{color.Blue}} #colorCheckBox class="color-checkbox" text="U" [checked]="hasColor(color.Blue)"></CheckBox>
-        <CheckBox id={{color.Black}} #colorCheckBox class="color-checkbox" text="B" [checked]="hasColor(color.Black)"></CheckBox>
-        <CheckBox id={{color.Red}} #colorCheckBox class="color-checkbox" text="R" [checked]="hasColor(color.Red)"></CheckBox>
-        <CheckBox id={{color.Green}} #colorCheckBox class="color-checkbox" text="G" [checked]="hasColor(color.Green)"></CheckBox>
+        <CheckBox id={{color.White}} #colorCheckbox class="color-checkbox" text="W" [checked]="hasColor(color.White)"></CheckBox>
+        <CheckBox id={{color.Blue}} #colorCheckbox class="color-checkbox" text="U" [checked]="hasColor(color.Blue)"></CheckBox>
+        <CheckBox id={{color.Black}} #colorCheckbox class="color-checkbox" text="B" [checked]="hasColor(color.Black)"></CheckBox>
+        <CheckBox id={{color.Red}} #colorCheckbox class="color-checkbox" text="R" [checked]="hasColor(color.Red)"></CheckBox>
+        <CheckBox id={{color.Green}} #colorCheckbox class="color-checkbox" text="G" [checked]="hasColor(color.Green)"></CheckBox>
     </StackLayout>
     <Label class="h3 card-label" text="My Shared Cards:"></Label>
     <ListView class="page list-group card-list" [items]="cards">
         <ng-template let-card="item">
             <StackLayout class="list-group-item" orientation="horizontal">
                 <Label class="list-item-label" [text]="card.name"></Label>
-                <CheckBox></CheckBox>
+                <CheckBox #catalogCheckbox></CheckBox>
             </StackLayout>
         </ng-template>
     </ListView>

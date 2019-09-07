@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { ICardDefinition } from '../card/card-definition.interface';
 import { ICardInstanceDetail } from '../card/card-instance-detail.interface';
 import { IDeck } from '../deck/deck.interface';
+import { ICatalog } from '../catalog/catalog.interface';
 
 @Injectable({
 	providedIn: 'root'
@@ -36,6 +37,14 @@ export class DataTranslatorService {
             cardDefinitionName: databaseRow[4],
             currentDeckName: databaseRow[6]
         };
+    }
+
+    public toCatalog(databaseRow: any[]): ICatalog {
+        return  {
+            id: databaseRow[0],
+            cardDefinitionId: databaseRow[1],
+            deckId: databaseRow[2]
+        }
     }
 
     public toDeck(databaseRow: any[]): IDeck {

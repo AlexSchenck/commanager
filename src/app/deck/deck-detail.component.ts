@@ -28,7 +28,8 @@ export class DeckDetailComponent implements OnDestroy {
 
     @ViewChild('nameTextField', { static: false }) nameTextField: ElementRef<TextField>;
     @ViewChild('commanderTextField', { static: false }) commanderTextField: ElementRef<TextField>;
-    @ViewChildren('colorCheckBox') checkBoxFields: QueryList<ElementRef<CheckBox>>;
+    @ViewChildren('catalogCheckbox') catalogCheckboxes: QueryList<ElementRef<CheckBox>>;
+    @ViewChildren('colorCheckbox') colorCheckboxes: QueryList<ElementRef<CheckBox>>;
 
     private _subscriptions: Subscription[]
 
@@ -76,7 +77,7 @@ export class DeckDetailComponent implements OnDestroy {
         switch (result) {
             case 'submit':
                 let colorIdentity: Color = null;
-                this.checkBoxFields.forEach(checkboxRef => {
+                this.colorCheckboxes.forEach(checkboxRef => {
                     const checkbox = checkboxRef.nativeElement;
                     if (!checkbox.checked) return;
         

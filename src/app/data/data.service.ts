@@ -5,6 +5,7 @@ import { map, tap } from 'rxjs/operators';
 import { ICardDefinition } from '../card/card-definition.interface';
 import { ICardInstance } from '../card/card-instance.interface';
 import { ICardInstanceDetail } from '../card/card-instance-detail.interface';
+import { ICatalog } from '../catalog/catalog.interface';
 import { DatabaseTable } from '../common/database/database-table.enum';
 import { DatabaseService } from '../common/database/database.service';
 import { IRecord } from '../common/database/record.interface';
@@ -48,6 +49,13 @@ export class DataService {
         );
     }
 
+    public getCatalogs(deckId: number): Observable<ICatalog[]> {
+        const condition = { column: 'deckId', value: deckId };
+        return this._databaseService.query(DatabaseTable.Catalog, [condition]).pipe(
+            map(rows => rows.map(row => this._dataTranslatorService.toCatalog(row)))
+        );
+    }
+
     public getDeck(id: number): Observable<IDeck> {
         const condition = { column: 'id', value: id };
         return this._databaseService.query(DatabaseTable.Deck, [condition]).pipe(
@@ -79,6 +87,15 @@ export class DataService {
             tap(id => cardInstance.id = id),
             map(id => cardInstance)
         );    
+    }
+
+    public saveCatalog(catalog: ICatalog): Observable<ICatalog> {
+        if (!catalog) return of(null);
+
+        return this.save(DatabaseTable.Catalog, catalog, ...this._dataTranslatorService.toDatabaseColumnsAndValues(catalog)).pipe(
+            tap(id => catalog.id = id),
+            map(id => catalog)
+        );
     }
 
     public saveDeck(deck: IDeck): Observable<IDeck> {
