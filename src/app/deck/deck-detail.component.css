@@ -3,6 +3,10 @@
     margin-top: 2%;
 }
 
+.card-list {
+    height: 50%;
+}
+
 .checkbox-layout {
     margin-left: 5%;
 }
@@ -13,6 +17,11 @@
 
 .color-checkbox {
     width: 18%;
+}
+
+.list-item-label {
+    margin-left: 5%;
+    width: 75%;
 }
 
 .text-field-layout {

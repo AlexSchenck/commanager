@@ -65,6 +65,12 @@ export class CardsComponent implements OnDestroy {
 
     private populateCards(): void {
         this._subscriptions.push(this._dataService.getCardInstanceDetails().subscribe(details => {
+            details = details.sort((a, b) => {
+                if (a.cardDefinitionName === b.cardDefinitionName)
+                    return a.currentDeckName > b.currentDeckName ? 1 : -1;
+
+                return a.cardDefinitionName > b.cardDefinitionName ? 1 : -1
+            });
             this._cardInstanceDetails = details;
             this.cards = new ObservableArray(details);
         }));
