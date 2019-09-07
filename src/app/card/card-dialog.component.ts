@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
 import { ModalDialogParams } from 'nativescript-angular/modal-dialog';
 import { TokenModel } from 'nativescript-ui-autocomplete';
 import { RadAutoCompleteTextViewComponent } from 'nativescript-ui-autocomplete/angular';
@@ -53,6 +53,10 @@ export class CardDialogComponent implements OnDestroy {
         this._subscriptions.forEach(subscription => subscription.unsubscribe());
     }
 
+    public onAutoCompleteLoaded(): void {
+        this.cardAutoComplete.autoCompleteTextView.text = this.cardInstance ? this.cardInstance.cardDefinitionName : '';
+    }
+
     public setSubmitEnabled(eventArgs: any): void {
         this.isSubmitEnabled = !!eventArgs.text;
     }
@@ -63,7 +67,7 @@ export class CardDialogComponent implements OnDestroy {
         }
 
         // Get the card definition object from the name given in the control, if any
-        const cardName = this.cardAutoComplete.nativeElement.text;
+        const cardName = this.cardAutoComplete.autoCompleteTextView.text;
         const cardDefinition = this._cardDefinitions.find(card => card.name === cardName);
 
         // Get the deck boject from the item selected in the control, if any
