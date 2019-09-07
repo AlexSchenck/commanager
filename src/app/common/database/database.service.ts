@@ -132,4 +132,13 @@ export class DatabaseService {
 			concatMap((id: Observable<number>) => id)
 		);
 	}
+
+	public delete(table: DatabaseTable, id: number): Observable<number> {
+		if (!table || !id) return of(null);
+
+		return this._database.pipe(
+			map(db => from(db.execSQL(`DELETE FROM ${table.toString()} WHERE Id = ?`, ['' + id]))),
+			concatMap((id: Observable<number>) => id)
+		);
+	}
 }

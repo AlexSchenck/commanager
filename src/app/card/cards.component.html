@@ -6,9 +6,12 @@
 
 <ListView [items]="cards" class="page list-group">
     <ng-template let-card="item">
-        <StackLayout orientation="vertical" class="list-group-item" (tap)="openDialog(card)">
-            <Label [text]="card.cardDefinitionName" class="list-group-item"></Label>
-            <label text="Current Deck: {{card.currentDeckName || 'None'}}" class="list-group-item"></label>
+        <StackLayout class="list-group-item" orientation="horizontal">
+            <StackLayout class="label-layout" orientation="vertical" (tap)="openDialog(card)">
+                <Label [text]="card.cardDefinitionName"></Label>
+                <Label text="Current Deck: {{card.currentDeckName || 'None'}}"></Label>
+            </StackLayout>
+            <Button class="btn btn-secondary" text="Delete" (tap)="deleteCard(card)"></Button>
         </StackLayout>
     </ng-template>
 </ListView>

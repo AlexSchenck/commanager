@@ -1,7 +1,6 @@
-export interface ICardInstanceDetail {
-    id?: number;
-    cardDefinitionId?: number;
+import { ICardInstance } from "./card-instance.interface";
+
+export interface ICardInstanceDetail extends ICardInstance {
     cardDefinitionName?: string;
-    currentDeckId?: number;
     currentDeckName?: string;
 }

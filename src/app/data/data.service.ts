@@ -89,4 +89,14 @@ export class DataService {
         );
     }
     // </Save>
+
+    // <Delete>
+    public deleteCardDefinition(id: number): Observable<number> {
+        return this._databaseService.delete(DatabaseTable.CardDefinition, id);
+    }
+
+    public deleteCardInstance(id: number): Observable<number> {
+        return this._databaseService.delete(DatabaseTable.CardInstance, id);
+    }
+    // </Delete>
 }
