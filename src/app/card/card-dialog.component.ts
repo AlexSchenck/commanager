@@ -77,9 +77,9 @@ export class CardDialogComponent implements AfterViewInit, OnDestroy {
             return this._params.closeCallback(result);
         }
 
-        // Get the card definition object from the name given in the control, if any
-        const cardName = this.cardAutoComplete.autoCompleteTextView.text;
-        const cardDefinition = this._cardDefinitions.find(card => card.name === cardName);
+        // Get the card definition object from the name given in the control (case-insensitive), if any
+        const cardName = this.cardAutoComplete.autoCompleteTextView.text.toLowerCase();
+        const cardDefinition = this._cardDefinitions.find(card => card.name.toLowerCase() === cardName);
 
         // Get the deck boject from the item selected in the control, if any
         const listPicker = this.deckListPicker.nativeElement;
