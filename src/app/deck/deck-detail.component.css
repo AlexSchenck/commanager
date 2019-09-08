@@ -19,6 +19,14 @@
     width: 18%;
 }
 
+.list-header-button {
+    margin-left: 40%;
+}
+
+.list-header-layout {
+    width: 100%;
+}
+
 .list-item-label {
     margin-left: 5%;
     width: 75%;

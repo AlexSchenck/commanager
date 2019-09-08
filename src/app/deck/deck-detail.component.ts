@@ -1,6 +1,7 @@
-import { Component, ElementRef, OnDestroy, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, ElementRef, OnDestroy, QueryList, ViewChild, ViewChildren, ViewContainerRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CheckBox } from '@nstudio/nativescript-checkbox';
+import { ModalDialogOptions, ModalDialogService } from 'nativescript-angular/modal-dialog';
 import { RouterExtensions } from 'nativescript-angular/router';
 import { of, Subscription } from 'rxjs';
 import { concatMap } from 'rxjs/operators';
@@ -8,6 +9,7 @@ import { ObservableArray } from 'tns-core-modules/data/observable-array/observab
 import { TextField } from 'tns-core-modules/ui/text-field/text-field';
 
 import { ICardDefinition } from '../card/card-definition.interface';
+import { CardDialogComponent } from '../card/card-dialog.component';
 import { ICatalog } from '../catalog/catalog.interface';
 import { DataService } from '../data/data.service';
 import { Color } from './color.enum';
@@ -38,17 +40,17 @@ export class DeckDetailComponent implements OnDestroy {
 
     constructor(
         private _dataService: DataService,
+        private _modalDialogService: ModalDialogService,
         private _route: ActivatedRoute,
-        private _routerExtensions: RouterExtensions
+        private _routerExtensions: RouterExtensions,
+        private _viewContainerRef: ViewContainerRef
     ) {
         this.isDeleteEnabled = false;
         this.isSubmitEnabled = false;
         this.title = 'New Deck';
         this._subscriptions = [];
 
-        this._subscriptions.push(this._dataService.getCardDefinitions().subscribe(cardDefinitions => {
-            this.cards = new ObservableArray(cardDefinitions);
-        }));
+        this.populateCards();
 
         const id = +this._route.snapshot.params.id;
         if (!id) return;
@@ -119,6 +121,24 @@ export class DeckDetailComponent implements OnDestroy {
         }
 
         this._subscriptions.push(resultObs.subscribe(_ => this.navigateToDeckPage()));
+    }
+
+    public openCardDialog(): void {
+        const options: ModalDialogOptions = {
+            fullscreen: true,
+            viewContainerRef: this._viewContainerRef
+        };
+
+        this._modalDialogService.showModal(CardDialogComponent, options).then((result: 'submit' | 'cancel') => {
+            if (result === 'submit') this.populateCards();
+        });
+    }
+
+    private populateCards(): void {
+        this._subscriptions.push(this._dataService.getCardDefinitions().subscribe(cardDefinitions => {
+            cardDefinitions = cardDefinitions.sort((a, b) => a.name > b.name ? 1 : -1);
+            this.cards = new ObservableArray(cardDefinitions);
+        }));
     }
 
     private navigateToDeckPage(): void {

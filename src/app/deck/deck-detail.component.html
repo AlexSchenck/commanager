@@ -13,7 +13,10 @@
         <CheckBox id={{color.Red}} #colorCheckbox class="color-checkbox" text="R" [checked]="hasColor(color.Red)"></CheckBox>
         <CheckBox id={{color.Green}} #colorCheckbox class="color-checkbox" text="G" [checked]="hasColor(color.Green)"></CheckBox>
     </StackLayout>
-    <Label class="h3 card-label" text="My Shared Cards:"></Label>
+    <StackLayout class="list-header-layout" orientation="horizontal">
+        <Label class="h3 card-label" text="My Shared Cards:" verticalAlignment="center"></Label>
+        <Button class="btn btn-outline list-header-button" text="Add" verticalAlignment="center" (tap)="openCardDialog()"></Button>
+    </StackLayout>
     <ListView class="page list-group card-list" [items]="cards">
         <ng-template let-card="item">
             <StackLayout class="list-group-item" orientation="horizontal">
