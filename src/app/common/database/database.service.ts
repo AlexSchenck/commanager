@@ -141,7 +141,12 @@ export class DatabaseService {
 				const delimiter = ', ';
 				let sql = `INSERT INTO ${table.toString()} (${columns.join(delimiter)}) VALUES `;
 				sql += values.map(value => `(${value.map(_ => '?').join(delimiter)})`).join(delimiter);
-				return from(db.execSQL(sql, ...values));
+
+				// flatten values to 1d array
+				let params = [];
+				values.forEach(value => params = params.concat(value));
+
+				return from(db.execSQL(sql, params));
 			}),
 			concatMap((id: Observable<number>) => id)
 		);
