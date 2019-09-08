@@ -1,4 +1,4 @@
-import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { ModalDialogParams } from 'nativescript-angular/modal-dialog';
 import { TokenModel } from 'nativescript-ui-autocomplete';
 import { RadAutoCompleteTextViewComponent } from 'nativescript-ui-autocomplete/angular';
@@ -28,7 +28,7 @@ export class CardDialogComponent implements OnDestroy {
     private _subscriptions: Subscription[];
 
     @ViewChild('cardAutoComplete', { static: false }) cardAutoComplete: RadAutoCompleteTextViewComponent;
-    @ViewChild('deckListPicker', { static: false }) deckListPicker: ListPicker;
+    @ViewChild('deckListPicker', { static: false }) deckListPicker: ElementRef<ListPicker>;
 
     constructor(
         private _dataService: DataService,
@@ -71,7 +71,8 @@ export class CardDialogComponent implements OnDestroy {
         const cardDefinition = this._cardDefinitions.find(card => card.name === cardName);
 
         // Get the deck boject from the item selected in the control, if any
-        const deckName = this.deckListPicker.selectedIndex === 0 ? this.deckItems[this.deckListPicker.selectedIndex] : null;
+        const listPicker = this.deckListPicker.nativeElement;
+        const deckName = listPicker.selectedIndex !== 0 ? this.deckItems[listPicker.selectedIndex] : null;
         const deck = deckName ? this._decks.find(deck => deck.name === deckName) : null;
 
         // Save the card definition, then the card instance using that definition, then close the dialog
