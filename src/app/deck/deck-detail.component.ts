@@ -11,6 +11,7 @@ import { TextField } from 'tns-core-modules/ui/text-field/text-field';
 import { ICardDefinition } from '../card/card-definition.interface';
 import { CardDialogComponent } from '../card/card-dialog.component';
 import { ICatalog } from '../catalog/catalog.interface';
+import { SubscriptionComponent } from '../common/subscriptions/subscription.component';
 import { DataService } from '../data/data.service';
 import { Color } from './color.enum';
 import { IDeck } from './deck.interface';
@@ -21,7 +22,7 @@ import { IDeck } from './deck.interface';
     styleUrls: ['./deck-detail.component.css'],
     templateUrl: './deck-detail.component.html'
 })
-export class DeckDetailComponent implements OnDestroy {
+export class DeckDetailComponent extends SubscriptionComponent implements OnDestroy {
     public cards: ObservableArray<ICardDefinition>;
     public catalogs: ObservableArray<ICatalog>;
     public deck: IDeck;
@@ -36,8 +37,6 @@ export class DeckDetailComponent implements OnDestroy {
     @ViewChildren('catalogCheckbox') catalogCheckboxes: QueryList<ElementRef<CheckBox>>;
     @ViewChildren('colorCheckbox') colorCheckboxes: QueryList<ElementRef<CheckBox>>;
 
-    private _subscriptions: Subscription[]
-
     constructor(
         private _dataService: DataService,
         private _modalDialogService: ModalDialogService,
@@ -45,10 +44,11 @@ export class DeckDetailComponent implements OnDestroy {
         private _routerExtensions: RouterExtensions,
         private _viewContainerRef: ViewContainerRef
     ) {
+        super();
+
         this.isDeleteEnabled = false;
         this.isSubmitEnabled = false;
         this.title = 'New Deck';
-        this._subscriptions = [];
 
         this.populateCards();
 
@@ -58,17 +58,13 @@ export class DeckDetailComponent implements OnDestroy {
         this.isDeleteEnabled = true;
         this.isSubmitEnabled = true;
 
-        this._subscriptions.push(this._dataService.getDeck(id).subscribe(deck => {
+        this.subscriptions.push(this._dataService.getDeck(id).subscribe(deck => {
             this.deck = deck;
             this.title = this.deck.name;
         }));
-        this._subscriptions.push(this._dataService.getCatalogs(id).subscribe(catalogs => {
+        this.subscriptions.push(this._dataService.getCatalogs(id).subscribe(catalogs => {
             this.catalogs = new ObservableArray(catalogs);
         }));
-    }
-
-    public ngOnDestroy(): void {
-        this._subscriptions.forEach(subscription => subscription.unsubscribe());
     }
 
     public setSubmitEnabled(eventArgs: any): void {
@@ -120,7 +116,7 @@ export class DeckDetailComponent implements OnDestroy {
                 break;
         }
 
-        this._subscriptions.push(resultObs.subscribe(_ => this.navigateToDeckPage()));
+        this.subscriptions.push(resultObs.subscribe(_ => this.navigateToDeckPage()));
     }
 
     public openCardDialog(): void {
@@ -135,7 +131,7 @@ export class DeckDetailComponent implements OnDestroy {
     }
 
     private populateCards(): void {
-        this._subscriptions.push(this._dataService.getCardDefinitions().subscribe(cardDefinitions => {
+        this.subscriptions.push(this._dataService.getCardDefinitions().subscribe(cardDefinitions => {
             cardDefinitions = cardDefinitions.sort((a, b) => a.name > b.name ? 1 : -1);
             this.cards = new ObservableArray(cardDefinitions);
         }));

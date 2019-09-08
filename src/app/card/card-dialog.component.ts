@@ -2,11 +2,12 @@ import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@ang
 import { ModalDialogParams } from 'nativescript-angular/modal-dialog';
 import { TokenModel } from 'nativescript-ui-autocomplete';
 import { RadAutoCompleteTextViewComponent } from 'nativescript-ui-autocomplete/angular';
-import { of, Subscription } from 'rxjs';
+import { of } from 'rxjs';
 import { concatMap } from 'rxjs/operators';
 import { ObservableArray } from 'tns-core-modules/data/observable-array';
 import { ListPicker } from 'tns-core-modules/ui/list-picker/list-picker';
 
+import { SubscriptionComponent } from '../common/subscriptions/subscription.component';
 import { DataService } from '../data/data.service';
 import { IDeck } from '../deck/deck.interface';
 import { ICardDefinition } from './card-definition.interface';
@@ -17,7 +18,7 @@ import { ICardInstanceDetail } from './card-instance-detail.interface';
     styleUrls: ['./card-dialog.component.css'],
     templateUrl: './card-dialog.component.html'
 })
-export class CardDialogComponent implements AfterViewInit, OnDestroy {
+export class CardDialogComponent extends SubscriptionComponent implements AfterViewInit, OnDestroy {
     public cardDefinitionTokens: ObservableArray<TokenModel>;
     public cardInstance: ICardInstanceDetail;
     public deckItems: string[];
@@ -25,7 +26,6 @@ export class CardDialogComponent implements AfterViewInit, OnDestroy {
 
     private _cardDefinitions: ICardDefinition[];
     private _decks: IDeck[];
-    private _subscriptions: Subscription[];
 
     @ViewChild('cardAutoComplete', { static: false }) cardAutoComplete: RadAutoCompleteTextViewComponent;
     @ViewChild('deckListPicker', { static: false }) deckListPicker: ElementRef<ListPicker>;
@@ -34,16 +34,17 @@ export class CardDialogComponent implements AfterViewInit, OnDestroy {
         private _dataService: DataService,
         private _params: ModalDialogParams
     ) {
+        super();
+
         this.cardInstance = this._params.context.card;
         this.cardDefinitionTokens = new ObservableArray<TokenModel>();
         this.isSubmitEnabled = false;
-        this._subscriptions = [];
 
-        this._subscriptions.push(this._dataService.getCardDefinitions().subscribe(cards => {
+        this.subscriptions.push(this._dataService.getCardDefinitions().subscribe(cards => {
             this._cardDefinitions = cards;
             this.cardDefinitionTokens = new ObservableArray<TokenModel>(cards.map(card => new TokenModel(card.name, null)))
         }));
-        this._subscriptions.push(this._dataService.getDecks().subscribe(decks => {
+        this.subscriptions.push(this._dataService.getDecks().subscribe(decks => {
             this._decks = decks;
             this.deckItems = [' '].concat(this._decks.map(deck => deck.name));
             this.setListPickerIndex();
@@ -52,10 +53,6 @@ export class CardDialogComponent implements AfterViewInit, OnDestroy {
 
     public ngAfterViewInit(): void {
         this.setListPickerIndex()
-    }
-
-    public ngOnDestroy(): void {
-        this._subscriptions.forEach(subscription => subscription.unsubscribe());
     }
 
     private setListPickerIndex(): void {
@@ -88,7 +85,7 @@ export class CardDialogComponent implements AfterViewInit, OnDestroy {
 
         // Save the card definition, then the card instance using that definition, then close the dialog
         const cardDefinitionSaveObs = cardDefinition ? of(cardDefinition) : this._dataService.saveCardDefinition({ name: cardName });
-        this._subscriptions.push(cardDefinitionSaveObs.pipe(
+        this.subscriptions.push(cardDefinitionSaveObs.pipe(
             concatMap(cardDefinition => {
                 return this._dataService.saveCardInstance({
                     id: this.cardInstance ? this.cardInstance.id : null,
