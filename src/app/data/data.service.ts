@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { concat, Observable, of } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
 import { ICardDefinition } from '../card/card-definition.interface';
@@ -89,12 +89,13 @@ export class DataService {
         );    
     }
 
-    public saveCatalog(catalog: ICatalog): Observable<ICatalog> {
-        if (!catalog) return of(null);
+    public saveCatalogs(deckId: number, catalogs: ICatalog[]): Observable<number> {
+        if (!deckId || !catalogs || catalogs.length === 0) return of(null);
 
-        return this.save(DatabaseTable.Catalog, catalog, ...this._dataTranslatorService.toDatabaseColumnsAndValues(catalog)).pipe(
-            tap(id => catalog.id = id),
-            map(id => catalog)
+        // Delete catalogs assigned to this deckId, then save all of them
+        return concat(
+            this.deleteCatalogs(deckId),
+            this.saveMany(DatabaseTable.Catalog, ...this._dataTranslatorService.toDatabaseColumnsAndManyValues(catalogs))
         );
     }
 
@@ -114,19 +115,28 @@ export class DataService {
             this._databaseService.update(table, columns, values, record.id) : 
             this._databaseService.insert(table, columns, values);
     }
+
+    private saveMany(table: DatabaseTable, columns: string[], values: any[][]): Observable<number> {
+        // Insert only for now, no updates
+        return this._databaseService.insertMany(table, columns, values);
+    }
     // </Save>
 
     // <Delete>
     public deleteCardDefinition(id: number): Observable<number> {
-        return this._databaseService.delete(DatabaseTable.CardDefinition, id);
+        return this._databaseService.delete(DatabaseTable.CardDefinition, [{ column: 'id', value: id }]);
     }
 
     public deleteCardInstance(id: number): Observable<number> {
-        return this._databaseService.delete(DatabaseTable.CardInstance, id);
+        return this._databaseService.delete(DatabaseTable.CardInstance, [{ column: 'id', value: id }]);
+    }
+
+    public deleteCatalogs(deckId: number): Observable<number> {
+        return this._databaseService.delete(DatabaseTable.Catalog, [{ column: 'deckId', value: deckId }])
     }
 
     public deleteDeck(id: number): Observable<number> {
-        return this._databaseService.delete(DatabaseTable.Deck, id);
+        return this._databaseService.delete(DatabaseTable.Deck, [{ column: 'id', value: id }]);
     }
     // </Delete>
 }

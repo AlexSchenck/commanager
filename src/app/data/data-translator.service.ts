@@ -22,6 +22,22 @@ export class DataTranslatorService {
         return [columns, values];
     }
 
+    public toDatabaseColumnsAndManyValues(objects: Object[]): [string[], any[][]] {
+        if (!objects || objects.length === 0) return null;
+
+        let columns: string[] = [];
+        for(let key of Object.keys(objects[0])) {
+            columns.push(key[0].toUpperCase() + key.slice(1)); // to upper
+        }
+
+        let values: any[][] = [];
+        for (let object of objects) {
+            values.push(Object.keys(object).map(key => object[key])) // property values
+        }
+
+        return [columns, values];
+    }
+
     public toCardDefinition(databaseRow: any[]): ICardDefinition {
         return {
             id: databaseRow[0],

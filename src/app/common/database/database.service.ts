@@ -133,6 +133,20 @@ export class DatabaseService {
 		);
 	}
 
+	public insertMany(table: DatabaseTable, columns: string[], values: any[][]): Observable<number> {
+		if (!table || !columns || !values) return of(null);
+
+		return this._database.pipe(
+			map(db => {
+				const delimiter = ', ';
+				let sql = `INSERT INTO ${table.toString()} (${columns.join(delimiter)}) VALUES `;
+				sql += values.map(value => `(${value.map(_ => '?').join(delimiter)})`).join(delimiter);
+				return from(db.execSQL(sql, ...values));
+			}),
+			concatMap((id: Observable<number>) => id)
+		);
+	}
+
 	public update(table: DatabaseTable, columns: string[], values: any[], id: number): Observable<number> {
 		if (!table || !columns || !values) return of(null);
 
@@ -142,11 +156,16 @@ export class DatabaseService {
 		);
 	}
 
-	public delete(table: DatabaseTable, id: number): Observable<number> {
-		if (!table || !id) return of(null);
+	public delete(table: DatabaseTable, conditions: IDatabaseWhereCondition[]): Observable<number> {
+		if (!table) return of(null);
+
+		let sql = `DELETE FROM ${table.toString()}`;
+		if (conditions) {
+			sql += ` WHERE ${conditions.map(condition => `${condition.column} = ${condition.value}`).join(' AND ')}`;
+		}
 
 		return this._database.pipe(
-			map(db => from(db.execSQL(`DELETE FROM ${table.toString()} WHERE Id = ?`, ['' + id]))),
+			map(db => from(db.execSQL(sql))),
 			concatMap((id: Observable<number>) => id)
 		);
 	}
