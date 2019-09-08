@@ -18,7 +18,7 @@
         <ng-template let-card="item">
             <StackLayout class="list-group-item" orientation="horizontal">
                 <Label class="list-item-label" [text]="card.name"></Label>
-                <CheckBox #catalogCheckbox></CheckBox>
+                <CheckBox id={{card.id}} #catalogCheckbox [checked]="hasCatalog(card.id)"></CheckBox>
             </StackLayout>
         </ng-template>
     </ListView>

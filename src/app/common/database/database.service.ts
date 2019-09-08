@@ -68,8 +68,8 @@ export class DatabaseService {
 			Id INTEGER PRIMARY KEY,
 			CardDefinitionId INTEGER NOT NULL,
 			CurrentDeckId INTEGER NULL,
-			FOREIGN KEY (CardDefinitionId) REFERENCES CardDefinition(Id),
-			FOREIGN KEY (CurrentDeckId) REFERENCES Deck(Id)
+			FOREIGN KEY (CardDefinitionId) REFERENCES CardDefinition(Id) ON DELETE CASCADE,
+			FOREIGN KEY (CurrentDeckId) REFERENCES Deck(Id) ON DELETE SET NULL
 		)`;
 		return from(db.execSQL(sql)).pipe(map(() => db));
 	}
@@ -80,8 +80,8 @@ export class DatabaseService {
 			Id INTEGER PRIMARY KEY,
 			CardDefinitionId INTEGER NOT NULL,
 			DeckId INTEGER NOT NULL,
-			FOREIGN KEY (CardDefinitionId) REFERENCES CardDefinition(Id),
-			FOREIGN KEY (DeckId) REFERENCES Deck(Id)
+			FOREIGN KEY (CardDefinitionId) REFERENCES CardDefinition(Id) ON DELETE CASCADE,
+			FOREIGN KEY (DeckId) REFERENCES Deck(Id) ON DELETE CASCADE
 		)`;
 		return from(db.execSQL(sql)).pipe(map(() => db));
 	}

@@ -3,10 +3,12 @@ import { ActivatedRoute } from '@angular/router';
 import { CheckBox } from '@nstudio/nativescript-checkbox';
 import { RouterExtensions } from 'nativescript-angular/router';
 import { of, Subscription } from 'rxjs';
+import { concatMap } from 'rxjs/operators';
 import { ObservableArray } from 'tns-core-modules/data/observable-array/observable-array';
 import { TextField } from 'tns-core-modules/ui/text-field/text-field';
 
 import { ICardDefinition } from '../card/card-definition.interface';
+import { ICatalog } from '../catalog/catalog.interface';
 import { DataService } from '../data/data.service';
 import { Color } from './color.enum';
 import { IDeck } from './deck.interface';
@@ -19,6 +21,7 @@ import { IDeck } from './deck.interface';
 })
 export class DeckDetailComponent implements OnDestroy {
     public cards: ObservableArray<ICardDefinition>;
+    public catalogs: ObservableArray<ICatalog>;
     public deck: IDeck;
     public isDeleteEnabled: boolean;
     public isSubmitEnabled: boolean;
@@ -57,6 +60,9 @@ export class DeckDetailComponent implements OnDestroy {
             this.deck = deck;
             this.title = this.deck.name;
         }));
+        this._subscriptions.push(this._dataService.getCatalogs(id).subscribe(catalogs => {
+            this.catalogs = new ObservableArray(catalogs);
+        }));
     }
 
     public ngOnDestroy(): void {
@@ -65,6 +71,10 @@ export class DeckDetailComponent implements OnDestroy {
 
     public setSubmitEnabled(eventArgs: any): void {
         this.isSubmitEnabled = !!eventArgs.value;
+    }
+
+    public hasCatalog(cardDefinitionId: number): boolean {
+        return this.catalogs ? !!(this.catalogs.some(catalog => catalog.cardDefinitionId === cardDefinitionId)) : false;
     }
 
     public hasColor(color: Color): boolean {
@@ -91,7 +101,17 @@ export class DeckDetailComponent implements OnDestroy {
                     name: this.nameTextField.nativeElement.text,
                     commander: this.commanderTextField.nativeElement.text,
                     colorIdentity
-                });
+                }).pipe(
+                    concatMap(deck => {
+                        let cardDefinitionIds: number[] = [];
+                        this.catalogCheckboxes.forEach(checkboxRef => {
+                            // If checked, add this card definition to the deck's catalog
+                            const checkbox = checkboxRef.nativeElement;
+                            if (checkbox.checked) cardDefinitionIds.push(+checkbox.id);
+                        });
+                        return this._dataService.saveCatalogs(deck.id, cardDefinitionIds);
+                    })
+                );
                 break;
             case 'delete':
                 resultObs = this._dataService.deleteDeck(this.deck.id);

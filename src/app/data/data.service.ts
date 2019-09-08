@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { concat, Observable, of } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { concatMap, map, tap } from 'rxjs/operators';
 
 import { ICardDefinition } from '../card/card-definition.interface';
 import { ICardInstance } from '../card/card-instance.interface';
@@ -89,14 +89,20 @@ export class DataService {
         );    
     }
 
-    public saveCatalogs(deckId: number, catalogs: ICatalog[]): Observable<number> {
-        if (!deckId || !catalogs || catalogs.length === 0) return of(null);
+    public saveCatalogs(deckId: number, cardDefinitionIds: number[]): Observable<number> {
+        if (!deckId || !cardDefinitionIds) return of(null);
 
-        // Delete catalogs assigned to this deckId, then save all of them
-        return concat(
-            this.deleteCatalogs(deckId),
-            this.saveMany(DatabaseTable.Catalog, ...this._dataTranslatorService.toDatabaseColumnsAndManyValues(catalogs))
-        );
+        // Delete catalogs assigned to this deckId, then save all of them if any to save
+        let resultObs = this.deleteCatalogs(deckId);
+
+        if (cardDefinitionIds.length > 0) {
+            const catalogs: ICatalog[] = cardDefinitionIds.map(id => ({ cardDefinitionId: id, deckId }));
+            resultObs = resultObs.pipe(
+                concatMap(_ => this.saveMany(DatabaseTable.Catalog, ...this._dataTranslatorService.toDatabaseColumnsAndManyValues(catalogs)))
+            );
+        }
+
+        return resultObs;
     }
 
     public saveDeck(deck: IDeck): Observable<IDeck> {
