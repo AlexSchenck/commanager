@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { ModalDialogParams } from 'nativescript-angular/modal-dialog';
 import { TokenModel } from 'nativescript-ui-autocomplete';
 import { RadAutoCompleteTextViewComponent } from 'nativescript-ui-autocomplete/angular';
@@ -17,7 +17,7 @@ import { ICardInstanceDetail } from './card-instance-detail.interface';
     styleUrls: ['./card-dialog.component.css'],
     templateUrl: './card-dialog.component.html'
 })
-export class CardDialogComponent implements OnDestroy {
+export class CardDialogComponent implements AfterViewInit, OnDestroy {
     public cardDefinitionTokens: ObservableArray<TokenModel>;
     public cardInstance: ICardInstanceDetail;
     public deckItems: string[];
@@ -46,11 +46,22 @@ export class CardDialogComponent implements OnDestroy {
         this._subscriptions.push(this._dataService.getDecks().subscribe(decks => {
             this._decks = decks;
             this.deckItems = [' '].concat(this._decks.map(deck => deck.name));
+            this.setListPickerIndex();
         }));
+    }
+
+    public ngAfterViewInit(): void {
+        this.setListPickerIndex()
     }
 
     public ngOnDestroy(): void {
         this._subscriptions.forEach(subscription => subscription.unsubscribe());
+    }
+
+    private setListPickerIndex(): void {
+        if (this.cardInstance && this.cardInstance.currentDeckId && this.deckListPicker) {
+            this.deckListPicker.nativeElement.selectedIndex = this.deckItems.findIndex(deckItem => this.cardInstance.currentDeckName === deckItem);
+        }
     }
 
     public onAutoCompleteLoaded(): void {
