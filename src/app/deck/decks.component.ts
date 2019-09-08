@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ViewChild, OnDestroy } from '@angular/core';
 import { RadSideDrawer } from 'nativescript-ui-sidedrawer';
 import { RadSideDrawerComponent } from 'nativescript-ui-sidedrawer/angular';
 import { Subscription } from 'rxjs';
@@ -13,7 +13,7 @@ import { IDeck } from './deck.interface';
     styleUrls: ['decks.component.css'],
     templateUrl: './decks.component.html'
 })
-export class DecksComponent implements AfterViewInit {
+export class DecksComponent implements AfterViewInit, OnDestroy {
     public decks: ObservableArray<IDeck>;
 
     @ViewChild(RadSideDrawerComponent, { static: false }) public drawerComponent: RadSideDrawerComponent;
@@ -28,6 +28,7 @@ export class DecksComponent implements AfterViewInit {
         this._subscriptions = [];
 
         this._subscriptions.push(this._dataService.getDecks().subscribe(decks => {
+            decks = decks.sort((a, b) =>  a.name > b.name ? 1 : -1);
             this.decks = new ObservableArray(decks);
         }));
     }
@@ -35,6 +36,10 @@ export class DecksComponent implements AfterViewInit {
     public ngAfterViewInit(): void {
         this._drawer = this.drawerComponent.sideDrawer;
         this._changeDetectorRef.detectChanges();
+    }
+
+    public ngOnDestroy(): void {
+        this._subscriptions.forEach(subscription => subscription.unsubscribe());
     }
 
     public toggleDrawer(): void {
