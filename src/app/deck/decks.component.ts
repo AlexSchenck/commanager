@@ -5,6 +5,7 @@ import { ObservableArray } from 'tns-core-modules/data/observable-array/observab
 
 import { SubscriptionComponent } from '../common/subscriptions/subscription.component';
 import { DataService } from '../data/data.service';
+import { Color, ColorSymbol } from './color.enum';
 import { IDeck } from './deck.interface';
 
 @Component({
@@ -27,7 +28,7 @@ export class DecksComponent extends SubscriptionComponent implements AfterViewIn
         super();
 
         this.subscriptions.push(this._dataService.getDecks().subscribe(decks => {
-            decks = decks.sort((a, b) =>  a.name > b.name ? 1 : -1);
+            decks = decks.sort((a, b) => a.name > b.name ? 1 : -1);
             this.decks = new ObservableArray(decks);
         }));
     }
@@ -35,6 +36,18 @@ export class DecksComponent extends SubscriptionComponent implements AfterViewIn
     public ngAfterViewInit(): void {
         this._drawer = this.drawerComponent.sideDrawer;
         this._changeDetectorRef.detectChanges();
+    }
+
+    public toColorString(colorIdentity: number): string {
+        if (!colorIdentity) return 'Colorless';
+        let result = '';
+
+        for (const color in Color) {
+            const hasColor = colorIdentity & +color;
+            if (!!hasColor) result += (ColorSymbol[+color]).toString();
+        }
+
+        return result;
     }
 
     public toggleDrawer(): void {

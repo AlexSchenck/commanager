@@ -11,7 +11,6 @@ export abstract class SubscriptionComponent implements OnDestroy {
     }
 
     public ngOnDestroy(): void {
-        console.log('called yepps');
         this._subscriptions.forEach(subscription => subscription.unsubscribe());
     }
 }

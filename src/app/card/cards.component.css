@@ -1,3 +1,8 @@
+.card-deck-label {
+    color: gray;
+}
+
 .label-layout {
-    width: 65%;
+    margin-left: 5%;
+    width: 60%;
 }

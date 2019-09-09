@@ -15,10 +15,14 @@
     </StackLayout>
     <ListView tkMainContent [items]="decks" class="page list-group">
         <ng-template let-deck="item">
-            <GridLayout orientation="horizontal" class="list-group-item">
-                <Label [nsRouterLink]="['/deck', deck.id]" [text]="deck.name" class="list-group-item"></Label>
-                <Button [nsRouterLink]="['/play', deck.id]" class="btn btn-primary" text="Play" horizontalAlignment="right"></Button>
-            </GridLayout>
+            <StackLayout class="list-group-item" orientation="horizontal" [nsRouterLink]="['/deck', deck.id]">
+                <StackLayout class="deck-label-layout" orientation="vertical" verticalAlignment="center">
+                    <Label [text]="deck.name"></Label>
+                    <Label class="deck-commander-label" [text]="deck.commander"></Label>
+                    <Label [text]="toColorString(deck.colorIdentity)"></Label>
+                </StackLayout>
+                <Button class="btn btn-primary" [nsRouterLink]="['/play', deck.id]" text="Play" verticalAlignment="center"></Button>
+            </StackLayout>
         </ng-template>
     </ListView>
 </RadSideDrawer>

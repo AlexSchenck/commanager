@@ -1,15 +1,15 @@
 <ActionBar title="Shared Cards" class="action-bar">
     <!-- Add Card button -->
     <ActionItem icon="res://baseline_add_black_48dp" (tap)="openDialog()" *ifAndroid></ActionItem>
-    <ActionItem icon="res://add" ios.position="right" (tap)="openDialog()" *ifIos></ActionItem>    
+    <ActionItem icon="res://add" ios.position="right" (tap)="openDialog()" *ifIos></ActionItem>
 </ActionBar>
 
 <ListView [items]="cards" class="page list-group">
     <ng-template let-card="item">
         <StackLayout class="list-group-item" orientation="horizontal">
-            <StackLayout class="label-layout" orientation="vertical" (tap)="openDialog(card)">
+            <StackLayout class="label-layout" orientation="vertical" verticalAlignment="center" (tap)="openDialog(card)">
                 <Label [text]="card.cardDefinitionName"></Label>
-                <Label text="Current Deck: {{card.currentDeckName || 'None'}}"></Label>
+                <Label class="card-deck-label" text="Current Deck: {{card.currentDeckName || 'None'}}"></Label>
             </StackLayout>
             <Button class="btn btn-outline" text="Delete" (tap)="deleteCard(card)"></Button>
         </StackLayout>
