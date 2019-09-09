@@ -5,14 +5,14 @@ import { DataService } from '../data/data.service';
 import { IDeck } from '../deck/deck.interface';
 
 @Injectable({
-	providedIn: 'root'
+    providedIn: 'root'
 })
 export class PlayService {
-    public decks: Observable<IDeck[]>;
     public deck: IDeck;
+    public decks: Observable<IDeck[]>;
     public updates: Map<string, number>;
-    
-	constructor(
+
+    constructor(
         private _dataService: DataService
     ) {
         this.decks = this.loadDecks();
@@ -21,5 +21,4 @@ export class PlayService {
     private loadDecks(): Observable<IDeck[]> {
         return this._dataService.getDecks();
     }
-
 }

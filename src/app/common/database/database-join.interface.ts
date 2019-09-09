@@ -1,4 +1,4 @@
-import { DatabaseTable } from "./database-table.enum";
+import { DatabaseTable } from './database-table.enum';
 
 export interface IDatabaseJoin {
     leftTable?: DatabaseTable;

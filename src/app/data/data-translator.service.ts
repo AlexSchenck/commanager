@@ -6,15 +6,15 @@ import { IDeck } from '../deck/deck.interface';
 import { ICatalog } from '../catalog/catalog.interface';
 
 @Injectable({
-	providedIn: 'root'
+    providedIn: 'root'
 })
 export class DataTranslatorService {
     public toDatabaseColumnsAndValues(object: Object): [string[], any[]] {
         if (!object) return null;
 
-        let columns: string[] = [];
-        let values: any[] = [];
-        for(let key of Object.keys(object)) {
+        const columns: string[] = [];
+        const values: any[] = [];
+        for (const key of Object.keys(object)) {
             columns.push(key[0].toUpperCase() + key.slice(1)); // to upper
             values.push(object[key]); // property value
         }
@@ -25,14 +25,14 @@ export class DataTranslatorService {
     public toDatabaseColumnsAndManyValues(objects: Object[]): [string[], any[][]] {
         if (!objects || objects.length === 0) return null;
 
-        let columns: string[] = [];
-        for(let key of Object.keys(objects[0])) {
+        const columns: string[] = [];
+        for (const key of Object.keys(objects[0])) {
             columns.push(key[0].toUpperCase() + key.slice(1)); // to upper
         }
 
-        let values: any[][] = [];
-        for (let object of objects) {
-            values.push(Object.keys(object).map(key => object[key])) // property values
+        const values: any[][] = [];
+        for (const object of objects) {
+            values.push(Object.keys(object).map(key => object[key])); // property values
         }
 
         return [columns, values];
@@ -42,7 +42,7 @@ export class DataTranslatorService {
         return {
             id: databaseRow[0],
             name: databaseRow[1]
-        }
+        };
     }
 
     public toCardInstanceDetail(databaseRow: any[]): ICardInstanceDetail {
@@ -56,11 +56,11 @@ export class DataTranslatorService {
     }
 
     public toCatalog(databaseRow: any[]): ICatalog {
-        return  {
+        return {
             id: databaseRow[0],
             cardDefinitionId: databaseRow[1],
             deckId: databaseRow[2]
-        }
+        };
     }
 
     public toDeck(databaseRow: any[]): IDeck {

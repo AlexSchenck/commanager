@@ -13,16 +13,14 @@ import { IDeck } from '../deck/deck.interface';
 import { DataTranslatorService } from './data-translator.service';
 
 @Injectable({
-	providedIn: 'root'
+    providedIn: 'root'
 })
 export class DataService {
-	constructor(
+    constructor(
         private _databaseService: DatabaseService,
         private _dataTranslatorService: DataTranslatorService
-    ) {
-    }
-    
-    // <Get>
+    ) { }
+
     public getCardDefinitions(): Observable<ICardDefinition[]> {
         return this._databaseService.select(DatabaseTable.CardDefinition).pipe(
             map(rows => rows.map(row => this._dataTranslatorService.toCardDefinition(row)))
@@ -62,22 +60,20 @@ export class DataService {
             map(rows => rows && rows.length > 0 ? this._dataTranslatorService.toDeck(rows[0]) : null)
         );
     }
-    
-    public getDecks(): Observable<IDeck[]> {
-		return this._databaseService.select(DatabaseTable.Deck).pipe(
-			map(rows => rows.map(row => this._dataTranslatorService.toDeck(row)))
-		);
-	}
-    // </Get>
 
-    // <Save>
+    public getDecks(): Observable<IDeck[]> {
+        return this._databaseService.select(DatabaseTable.Deck).pipe(
+            map(rows => rows.map(row => this._dataTranslatorService.toDeck(row)))
+        );
+    }
+
     public saveCardDefinition(cardDefinition: ICardDefinition): Observable<ICardDefinition> {
         if (!cardDefinition) return of(null);
 
         return this.save(DatabaseTable.CardDefinition, cardDefinition, ...this._dataTranslatorService.toDatabaseColumnsAndValues(cardDefinition)).pipe(
             tap(id => cardDefinition.id = id),
             map(id => cardDefinition)
-        );    
+        );
     }
 
     public saveCardInstance(cardInstance: ICardInstance): Observable<ICardInstance> {
@@ -86,7 +82,7 @@ export class DataService {
         return this.save(DatabaseTable.CardInstance, cardInstance, ...this._dataTranslatorService.toDatabaseColumnsAndValues(cardInstance)).pipe(
             tap(id => cardInstance.id = id),
             map(id => cardInstance)
-        );    
+        );
     }
 
     public saveCatalogs(deckId: number, cardDefinitionIds: number[]): Observable<number> {
@@ -114,21 +110,6 @@ export class DataService {
         );
     }
 
-    private save(table: DatabaseTable, record: IRecord, columns: string[], values: any[]): Observable<number> {
-        // Insert if id is null, update otherwise
-        // Returns new id if insert, # of rows affected if update
-        return record.id ?
-            this._databaseService.update(table, columns, values, record.id) : 
-            this._databaseService.insert(table, columns, values);
-    }
-
-    private saveMany(table: DatabaseTable, columns: string[], values: any[][]): Observable<number> {
-        // Insert only for now, no updates
-        return this._databaseService.insertMany(table, columns, values);
-    }
-    // </Save>
-
-    // <Delete>
     public deleteCardDefinition(id: number): Observable<number> {
         return this._databaseService.delete(DatabaseTable.CardDefinition, [{ column: 'id', value: id }]);
     }
@@ -138,11 +119,23 @@ export class DataService {
     }
 
     public deleteCatalogs(deckId: number): Observable<number> {
-        return this._databaseService.delete(DatabaseTable.Catalog, [{ column: 'deckId', value: deckId }])
+        return this._databaseService.delete(DatabaseTable.Catalog, [{ column: 'deckId', value: deckId }]);
     }
 
     public deleteDeck(id: number): Observable<number> {
         return this._databaseService.delete(DatabaseTable.Deck, [{ column: 'id', value: id }]);
     }
-    // </Delete>
+
+    private save(table: DatabaseTable, record: IRecord, columns: string[], values: any[]): Observable<number> {
+        // Insert if id is null, update otherwise
+        // Returns new id if insert, # of rows affected if update
+        return record.id ?
+            this._databaseService.update(table, columns, values, record.id) :
+            this._databaseService.insert(table, columns, values);
+    }
+
+    private saveMany(table: DatabaseTable, columns: string[], values: any[][]): Observable<number> {
+        // Insert only for now, no updates
+        return this._databaseService.insertMany(table, columns, values);
+    }
 }

@@ -65,7 +65,7 @@ export class CardsComponent extends SubscriptionComponent implements OnDestroy {
                 if (a.cardDefinitionName === b.cardDefinitionName)
                     return a.currentDeckName > b.currentDeckName ? 1 : -1;
 
-                return a.cardDefinitionName > b.cardDefinitionName ? 1 : -1
+                return a.cardDefinitionName > b.cardDefinitionName ? 1 : -1;
             });
             this._cardInstanceDetails = details;
             this.cards = new ObservableArray(details);

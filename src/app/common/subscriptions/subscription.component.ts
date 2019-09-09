@@ -5,7 +5,7 @@ export abstract class SubscriptionComponent implements OnDestroy {
     public get subscriptions(): Subscription[] { return this._subscriptions; }
 
     private _subscriptions: Subscription[];
-    
+
     constructor() {
         this._subscriptions = [];
     }

@@ -3,9 +3,9 @@ import { Component } from '@angular/core';
 import { DatabaseService } from './common/database/database.service';
 
 @Component({
-    selector: "ns-app",
+    selector: 'ns-app',
     moduleId: module.id,
-    templateUrl: "./app.component.html"
+    templateUrl: './app.component.html'
 })
 export class AppComponent {
 	constructor (

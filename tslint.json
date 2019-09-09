@@ -2,7 +2,7 @@
 	"extends": [
 		"tslint-eslint-rules"
 	],
-    "rules": {
+	"rules": {
 		"adjacent-overload-signatures": true,
 		"ban-comma-operator": true,
 		"block-spacing": [
@@ -26,8 +26,7 @@
 		"member-ordering": [
 			true,
 			{
-			  "order": "fields-first",
-			  "alphabetize": true
+				"order": "fields-first"
 			}
 		],
 		"object-curly-spacing": [
@@ -40,11 +39,8 @@
 		"no-debugger": true,
 		"no-duplicate-variable": true,
 		"no-empty": true,
-		"no-unreachable": true,
 		"no-trailing-whitespace": true,
 		"no-unused-expression": true,
-		"no-unused-locals": true,
-		"no-unused-variable": true,
 		"no-var-keyword": true,
 		"prefer-const": true,
 		"prefer-for-of": true,
@@ -63,7 +59,10 @@
 		],
 		"ter-indent": [
 			true,
-			4
+			4,
+			{
+				"SwitchCase": 1
+			}
 		],
 		"trailing-comma": [
 			true,

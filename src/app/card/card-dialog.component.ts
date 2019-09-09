@@ -24,11 +24,11 @@ export class CardDialogComponent extends SubscriptionComponent implements AfterV
     public deckItems: string[];
     public isSubmitEnabled: boolean;
 
+    @ViewChild('cardAutoComplete', { static: false }) public cardAutoComplete: RadAutoCompleteTextViewComponent;
+    @ViewChild('deckListPicker', { static: false }) public deckListPicker: ElementRef<ListPicker>;
+
     private _cardDefinitions: ICardDefinition[];
     private _decks: IDeck[];
-
-    @ViewChild('cardAutoComplete', { static: false }) cardAutoComplete: RadAutoCompleteTextViewComponent;
-    @ViewChild('deckListPicker', { static: false }) deckListPicker: ElementRef<ListPicker>;
 
     constructor(
         private _dataService: DataService,
@@ -42,7 +42,7 @@ export class CardDialogComponent extends SubscriptionComponent implements AfterV
 
         this.subscriptions.push(this._dataService.getCardDefinitions().subscribe(cards => {
             this._cardDefinitions = cards;
-            this.cardDefinitionTokens = new ObservableArray<TokenModel>(cards.map(card => new TokenModel(card.name, null)))
+            this.cardDefinitionTokens = new ObservableArray<TokenModel>(cards.map(card => new TokenModel(card.name, null)));
         }));
         this.subscriptions.push(this._dataService.getDecks().subscribe(decks => {
             this._decks = decks;
@@ -52,13 +52,7 @@ export class CardDialogComponent extends SubscriptionComponent implements AfterV
     }
 
     public ngAfterViewInit(): void {
-        this.setListPickerIndex()
-    }
-
-    private setListPickerIndex(): void {
-        if (this.cardInstance && this.cardInstance.currentDeckId && this.deckListPicker) {
-            this.deckListPicker.nativeElement.selectedIndex = this.deckItems.findIndex(deckItem => this.cardInstance.currentDeckName === deckItem);
-        }
+        this.setListPickerIndex();
     }
 
     public onAutoCompleteLoaded(): void {
@@ -94,5 +88,11 @@ export class CardDialogComponent extends SubscriptionComponent implements AfterV
                 });
             })
         ).subscribe(_ => this._params.closeCallback(result)));
+    }
+
+    private setListPickerIndex(): void {
+        if (this.cardInstance && this.cardInstance.currentDeckId && this.deckListPicker) {
+            this.deckListPicker.nativeElement.selectedIndex = this.deckItems.findIndex(deckItem => this.cardInstance.currentDeckName === deckItem);
+        }
     }
 }

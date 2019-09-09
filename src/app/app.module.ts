@@ -12,7 +12,7 @@ import { IfAndroidDirective } from './common/directives/android-platform.directi
 import { IfIosDirective } from './common/directives/ios-platform.directive';
 import { DecksComponent } from './deck/decks.component';
 import { DeckDetailComponent } from './deck/deck-detail.component';
-import { PlayComponent } from './play/play.component'
+import { PlayComponent } from './play/play.component';
 import { PlayConfirmComponent } from './play/play-confirm.component';
 
 @NgModule({

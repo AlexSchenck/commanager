@@ -32,10 +32,10 @@ export class DeckDetailComponent extends SubscriptionComponent implements OnDest
 
     public get color() { return Color; }
 
-    @ViewChild('nameTextField', { static: false }) nameTextField: ElementRef<TextField>;
-    @ViewChild('commanderTextField', { static: false }) commanderTextField: ElementRef<TextField>;
-    @ViewChildren('catalogCheckbox') catalogCheckboxes: QueryList<ElementRef<CheckBox>>;
-    @ViewChildren('colorCheckbox') colorCheckboxes: QueryList<ElementRef<CheckBox>>;
+    @ViewChild('nameTextField', { static: false }) public nameTextField: ElementRef<TextField>;
+    @ViewChild('commanderTextField', { static: false }) public commanderTextField: ElementRef<TextField>;
+    @ViewChildren('catalogCheckbox') public catalogCheckboxes: QueryList<ElementRef<CheckBox>>;
+    @ViewChildren('colorCheckbox') public colorCheckboxes: QueryList<ElementRef<CheckBox>>;
 
     constructor(
         private _dataService: DataService,
@@ -88,7 +88,7 @@ export class DeckDetailComponent extends SubscriptionComponent implements OnDest
                 this.colorCheckboxes.forEach(checkboxRef => {
                     const checkbox = checkboxRef.nativeElement;
                     if (!checkbox.checked) return;
-        
+
                     // Add the color to the color identity if the checkbox is checked
                     const colorValue: Color = +checkbox.id;
                     colorIdentity = colorIdentity ? colorIdentity |= colorValue : colorValue;
@@ -101,7 +101,7 @@ export class DeckDetailComponent extends SubscriptionComponent implements OnDest
                     colorIdentity
                 }).pipe(
                     concatMap(deck => {
-                        let cardDefinitionIds: number[] = [];
+                        const cardDefinitionIds: number[] = [];
                         this.catalogCheckboxes.forEach(checkboxRef => {
                             // If checked, add this card definition to the deck's catalog
                             const checkbox = checkboxRef.nativeElement;
@@ -138,6 +138,6 @@ export class DeckDetailComponent extends SubscriptionComponent implements OnDest
     }
 
     private navigateToDeckPage(): void {
-        this._routerExtensions.navigateByUrl('decks')
+        this._routerExtensions.navigateByUrl('decks');
     }
 }

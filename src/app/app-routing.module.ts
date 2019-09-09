@@ -3,7 +3,7 @@ import { Routes } from '@angular/router';
 import { NativeScriptRouterModule } from 'nativescript-angular/router';
 
 import { CardsComponent } from './card/cards.component';
-import { DecksComponent } from './deck/decks.component'
+import { DecksComponent } from './deck/decks.component';
 import { DeckDetailComponent } from './deck/deck-detail.component';
 import { PlayComponent } from './play/play.component';
 import { PlayConfirmComponent } from './play/play-confirm.component';
