@@ -2,10 +2,10 @@
     <RadAutoCompleteTextView class="cardInput" #cardAutoComplete [items]="cardDefinitionTokens" completionMode="Contains" suggestMode="Suggest" (textChanged)="setSubmitEnabled($event)" (loaded)="onAutoCompleteLoaded()" hint="Card Name*"></RadAutoCompleteTextView>
     <StackLayout class="deckLayout" orientation="horizontal">
         <Label class="deckLabel" text="Current Deck"></Label>
-        <ListPicker #deckListPicker class="deckPicker" [items]="deckItems"></ListPicker>    
+        <ListPicker #deckListPicker class="deckPicker" [items]="deckItems"></ListPicker>
     </StackLayout>
     <StackLayout class="buttonLayout" orientation="horizontal" horizontalAlignment="right">
-        <Button class="btn btn-outline" text="Cancel" (tap)="close('cancel')"></Button>
-        <Button class="btn btn-primary" text="Submit" (tap)="close('submit')" [isEnabled]="isSubmitEnabled"></Button>
+        <Button class="btn btn-outline" text="Cancel" (tap)="close(cardDialogResult.Cancel)"></Button>
+        <Button class="btn btn-primary" text="Submit" (tap)="close(cardDialogResult.Submit)" [isEnabled]="isSubmitEnabled"></Button>
     </StackLayout>
 </StackLayout>

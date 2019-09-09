@@ -10,10 +10,12 @@ import { TextField } from 'tns-core-modules/ui/text-field/text-field';
 
 import { ICardDefinition } from '../card/card-definition.interface';
 import { CardDialogComponent } from '../card/card-dialog.component';
+import { CardDialogResult } from '../card/card-dialog-result.enum';
 import { ICatalog } from '../catalog/catalog.interface';
 import { SubscriptionComponent } from '../common/subscriptions/subscription.component';
 import { DataService } from '../data/data.service';
 import { Color } from './color.enum';
+import { DeckDetailResult } from './deck-detail-result.enum';
 import { IDeck } from './deck.interface';
 
 @Component({
@@ -31,6 +33,7 @@ export class DeckDetailComponent extends SubscriptionComponent implements OnDest
     public title: string;
 
     public get color() { return Color; }
+    public get deckDetailResult() { return DeckDetailResult; }
 
     @ViewChild('nameTextField', { static: false }) public nameTextField: ElementRef<TextField>;
     @ViewChild('commanderTextField', { static: false }) public commanderTextField: ElementRef<TextField>;
@@ -79,11 +82,11 @@ export class DeckDetailComponent extends SubscriptionComponent implements OnDest
         return this.deck ? !!(this.deck.colorIdentity & color) : false;
     }
 
-    public close(result: 'submit' | 'cancel' | 'delete'): void {
+    public close(result: DeckDetailResult): void {
         let resultObs = of(null);
 
         switch (result) {
-            case 'submit':
+            case DeckDetailResult.Submit:
                 let colorIdentity: Color = null;
                 this.colorCheckboxes.forEach(checkboxRef => {
                     const checkbox = checkboxRef.nativeElement;
@@ -111,7 +114,7 @@ export class DeckDetailComponent extends SubscriptionComponent implements OnDest
                     })
                 );
                 break;
-            case 'delete':
+            case DeckDetailResult.Delete:
                 resultObs = this._dataService.deleteDeck(this.deck.id);
                 break;
         }
@@ -125,8 +128,8 @@ export class DeckDetailComponent extends SubscriptionComponent implements OnDest
             viewContainerRef: this._viewContainerRef
         };
 
-        this._modalDialogService.showModal(CardDialogComponent, options).then((result: 'submit' | 'cancel') => {
-            if (result === 'submit') this.populateCards();
+        this._modalDialogService.showModal(CardDialogComponent, options).then((result: CardDialogResult) => {
+            if (result === CardDialogResult.Submit) this.populateCards();
         });
     }
 

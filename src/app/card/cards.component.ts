@@ -6,6 +6,7 @@ import { ObservableArray } from 'tns-core-modules/data/observable-array/observab
 import { SubscriptionComponent } from '../common/subscriptions/subscription.component';
 import { DataService } from '../data/data.service';
 import { CardDialogComponent } from './card-dialog.component';
+import { CardDialogResult } from './card-dialog-result.enum';
 import { ICardInstanceDetail } from './card-instance-detail.interface';
 
 @Component({
@@ -37,8 +38,8 @@ export class CardsComponent extends SubscriptionComponent implements OnDestroy {
             viewContainerRef: this._viewContainerRef
         };
 
-        this._modalDialogService.showModal(CardDialogComponent, options).then((result: 'submit' | 'cancel') => {
-            if (result === 'submit') this.populateCards();
+        this._modalDialogService.showModal(CardDialogComponent, options).then((result: CardDialogResult) => {
+            if (result === CardDialogResult.Submit) this.populateCards();
         });
     }
 

@@ -11,6 +11,7 @@ import { SubscriptionComponent } from '../common/subscriptions/subscription.comp
 import { DataService } from '../data/data.service';
 import { IDeck } from '../deck/deck.interface';
 import { ICardDefinition } from './card-definition.interface';
+import { CardDialogResult } from './card-dialog-result.enum';
 import { ICardInstanceDetail } from './card-instance-detail.interface';
 
 @Component({
@@ -23,6 +24,8 @@ export class CardDialogComponent extends SubscriptionComponent implements AfterV
     public cardInstance: ICardInstanceDetail;
     public deckItems: string[];
     public isSubmitEnabled: boolean;
+
+    public get cardDialogResult() { return CardDialogResult; }
 
     @ViewChild('cardAutoComplete', { static: false }) public cardAutoComplete: RadAutoCompleteTextViewComponent;
     @ViewChild('deckListPicker', { static: false }) public deckListPicker: ElementRef<ListPicker>;
@@ -63,8 +66,8 @@ export class CardDialogComponent extends SubscriptionComponent implements AfterV
         this.isSubmitEnabled = !!eventArgs.text;
     }
 
-    public close(result: 'submit' | 'cancel'): void {
-        if (result === 'cancel') {
+    public close(result: CardDialogResult): void {
+        if (result === CardDialogResult.Cancel) {
             return this._params.closeCallback(result);
         }
 
