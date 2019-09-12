@@ -3,9 +3,10 @@ import { ActivatedRoute } from '@angular/router';
 import { CheckBox } from '@nstudio/nativescript-checkbox';
 import { ModalDialogOptions, ModalDialogService } from 'nativescript-angular/modal-dialog';
 import { RouterExtensions } from 'nativescript-angular/router';
-import { of, Subscription } from 'rxjs';
-import { concatMap } from 'rxjs/operators';
+import { from, of } from 'rxjs';
+import { concatMap, map } from 'rxjs/operators';
 import { ObservableArray } from 'tns-core-modules/data/observable-array/observable-array';
+import { confirm } from 'tns-core-modules/ui/dialogs';
 import { TextField } from 'tns-core-modules/ui/text-field/text-field';
 
 import { ICardDefinition } from '../card/card-definition.interface';
@@ -115,7 +116,16 @@ export class DeckDetailComponent extends SubscriptionComponent implements OnDest
                 );
                 break;
             case DeckDetailResult.Delete:
-                resultObs = this._dataService.deleteDeck(this.deck.id);
+                const confirmOptions = {
+                    title: 'Confirm',
+                    message: 'Are you sure you want to delete this deck?',
+                    okButtonText: 'Yes',
+                    cancelButtonText: 'No'
+                };
+
+                resultObs = from(confirm(confirmOptions)).pipe(
+                    map(confirm => confirm ? this._dataService.deleteDeck(this.deck.id) : null)
+                );
                 break;
         }
 

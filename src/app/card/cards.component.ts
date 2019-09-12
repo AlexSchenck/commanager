@@ -1,7 +1,9 @@
 import { Component, ViewContainerRef, OnDestroy } from '@angular/core';
 import { ModalDialogOptions, ModalDialogService } from 'nativescript-angular/modal-dialog';
+import { from, Observable, of } from 'rxjs';
 import { concatMap } from 'rxjs/operators';
 import { ObservableArray } from 'tns-core-modules/data/observable-array/observable-array';
+import { confirm } from 'tns-core-modules/ui/dialogs';
 
 import { SubscriptionComponent } from '../common/subscriptions/subscription.component';
 import { DataService } from '../data/data.service';
@@ -44,17 +46,28 @@ export class CardsComponent extends SubscriptionComponent implements OnDestroy {
     }
 
     public deleteCard(card: ICardInstanceDetail): void {
-        let deleteObs = this._dataService.deleteCardInstance(card.id);
+        const confirmOptions = {
+            title: 'Confirm',
+            message: 'Are you sure you want to delete this card?',
+            okButtonText: 'Yes',
+            cancelButtonText: 'No'
+        };
+
+        let deleteObs: Observable<number> = from(confirm(confirmOptions)).pipe(
+            concatMap(confirm => confirm ? this._dataService.deleteCardInstance(card.id) : of(null))
+        );
 
         // Delete card definition if this deleted instace is the last one to use it
         if (!this._cardInstanceDetails.some(detail => detail.id !== card.id && detail.cardDefinitionId === card.cardDefinitionId))
             deleteObs = deleteObs.pipe(
-                concatMap(_ => {
-                    return this._dataService.deleteCardDefinition(card.cardDefinitionId);
+                concatMap(result => {
+                    return result ? this._dataService.deleteCardDefinition(card.cardDefinitionId) : of(null);
                 })
             );
 
-        this.subscriptions.push(deleteObs.subscribe(_ => {
+        this.subscriptions.push(deleteObs.subscribe(result => {
+            if (!result) return;
+
             this._cardInstanceDetails = this._cardInstanceDetails.filter(detail => detail.id !== card.id);
             this.cards = new ObservableArray(this._cardInstanceDetails);
         }));
