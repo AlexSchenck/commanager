@@ -32,6 +32,7 @@ export class CardDialogComponent extends SubscriptionComponent implements AfterV
 
     private _cardDefinitions: ICardDefinition[];
     private _decks: IDeck[];
+    private _isOnlyInstanceOfDefinition: boolean;
 
     constructor(
         private _dataService: DataService,
@@ -42,6 +43,7 @@ export class CardDialogComponent extends SubscriptionComponent implements AfterV
         this.cardInstance = this._params.context.card;
         this.cardDefinitionTokens = new ObservableArray<TokenModel>();
         this.isSubmitEnabled = false;
+        this._isOnlyInstanceOfDefinition = !!this._params.context.isOnlyInstanceOfDefinition;
 
         this.subscriptions.push(this._dataService.getCardDefinitions().subscribe(cards => {
             this._cardDefinitions = cards;
@@ -73,23 +75,29 @@ export class CardDialogComponent extends SubscriptionComponent implements AfterV
 
         // Get the card definition object from the name given in the control (case-insensitive), if any
         const cardName = this.cardAutoComplete.autoCompleteTextView.text.toLowerCase();
-        const cardDefinition = this._cardDefinitions.find(card => card.name.toLowerCase() === cardName);
+        const existingCardDefinition = this._cardDefinitions.find(card => card.name.toLowerCase() === cardName);
 
-        // Get the deck boject from the item selected in the control, if any
+        // Get the deck object from the item selected in the control, if any
         const listPicker = this.deckListPicker.nativeElement;
         const deckName = listPicker.selectedIndex !== 0 ? this.deckItems[listPicker.selectedIndex] : null;
         const deck = deckName ? this._decks.find(deck => deck.name === deckName) : null;
 
+        // If this instance name is being changed, and is the last instance of its definition, update the definition name
+        const cardDefinition: ICardDefinition = {
+            id: this._isOnlyInstanceOfDefinition && this.cardInstance ? this.cardInstance.cardDefinitionId : null,
+            name: cardName
+        };
+
         // Save the card definition, then the card instance using that definition, then close the dialog
-        const cardDefinitionSaveObs = cardDefinition ? of(cardDefinition) : this._dataService.saveCardDefinition({ name: cardName });
+        const cardDefinitionSaveObs = existingCardDefinition ? of(existingCardDefinition) : this._dataService.saveCardDefinition(cardDefinition);
         this.subscriptions.push(cardDefinitionSaveObs.pipe(
-            concatMap(cardDefinition => {
-                return this._dataService.saveCardInstance({
+            concatMap(cardDefinition =>
+                this._dataService.saveCardInstance({
                     id: this.cardInstance ? this.cardInstance.id : null,
                     cardDefinitionId: cardDefinition.id,
                     currentDeckId: deck ? deck.id : null
-                });
-            })
+                })
+            )
         ).subscribe(_ => this._params.closeCallback(result)));
     }
 

@@ -127,11 +127,12 @@ export class DataService {
     }
 
     private save(table: DatabaseTable, record: IRecord, columns: string[], values: any[]): Observable<number> {
-        // Insert if id is null, update otherwise
-        // Returns new id if insert, # of rows affected if update
-        return record.id ?
-            this._databaseService.update(table, columns, values, record.id) :
-            this._databaseService.insert(table, columns, values);
+        // Insert if id is null, update otherwise. Always returns new or given id
+        return !record.id ?
+            this._databaseService.insert(table, columns, values) :
+            this._databaseService.update(table, columns, values, record.id).pipe(
+                map(numberOfRowsAffected => record.id)
+            );
     }
 
     private saveMany(table: DatabaseTable, columns: string[], values: any[][]): Observable<number> {

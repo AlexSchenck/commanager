@@ -34,8 +34,11 @@ export class CardsComponent extends SubscriptionComponent implements OnDestroy {
     }
 
     public openDialog(card: ICardInstanceDetail): void {
+        // Selected instance is last representation of its definition, send this info to the card dialog
+        const isOnlyInstanceOfDefinition = card ? !this._cardInstanceDetails.some(detail => card.id !== detail.id && card.cardDefinitionId === detail.cardDefinitionId) : false;
+
         const options: ModalDialogOptions = {
-            context: { card },
+            context: { card, isOnlyInstanceOfDefinition },
             fullscreen: true,
             viewContainerRef: this._viewContainerRef
         };
@@ -60,9 +63,7 @@ export class CardsComponent extends SubscriptionComponent implements OnDestroy {
         // Delete card definition if this deleted instace is the last one to use it
         if (!this._cardInstanceDetails.some(detail => detail.id !== card.id && detail.cardDefinitionId === card.cardDefinitionId))
             deleteObs = deleteObs.pipe(
-                concatMap(result => {
-                    return result ? this._dataService.deleteCardDefinition(card.cardDefinitionId) : of(null);
-                })
+                concatMap(result => result ? this._dataService.deleteCardDefinition(card.cardDefinitionId) : of(null))
             );
 
         this.subscriptions.push(deleteObs.subscribe(result => {
