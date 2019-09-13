@@ -1,4 +1,6 @@
 <ActionBar title="Shared Cards" class="action-bar">
+    <NavigationButton [nsRouterLink]="['/decks']" android.systemIcon="ic_menu_back"></NavigationButton>
+
     <!-- Add Card button -->
     <ActionItem icon="res://baseline_add_black_48dp" (tap)="openDialog()" *ifAndroid></ActionItem>
     <ActionItem icon="res://add" ios.position="right" (tap)="openDialog()" *ifIos></ActionItem>

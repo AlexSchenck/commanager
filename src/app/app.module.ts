@@ -14,6 +14,7 @@ import { DecksComponent } from './deck/decks.component';
 import { DeckDetailComponent } from './deck/deck-detail.component';
 import { PlayComponent } from './play/play.component';
 import { PlayConfirmComponent } from './play/play-confirm.component';
+import { PlayItemComponent } from './play/play-item.component';
 
 @NgModule({
     bootstrap: [
@@ -35,7 +36,8 @@ import { PlayConfirmComponent } from './play/play-confirm.component';
         IfAndroidDirective,
         IfIosDirective,
         PlayComponent,
-        PlayConfirmComponent
+        PlayConfirmComponent,
+        PlayItemComponent
     ],
     entryComponents: [
         CardDialogComponent

@@ -1,14 +1,9 @@
-<ActionBar title="Play {{deck.name}}" class="action-bar">
-        <Button [nsRouterLink]="['/playConfirm']" class="btn btn-default" text="Next" horizontalAlignment="right"></Button>
+<ActionBar class="action-bar" (loaded)="setActionBarTitle($event)">
+    <NavigationButton [nsRouterLink]="['/decks']" android.systemIcon="ic_menu_close_clear_cancel"></NavigationButton>
+    <ActionItem [nsRouterLink]="['/playConfirm']" android.position="actionBar" android.systemIcon="ic_menu_send"></ActionItem>
 </ActionBar>
-
-<GridLayout class="page">
-    <ListView [items]="cardsInDeck" class="list-group">
-        <ng-template let-card="item" let-i="index">
-            <DockLayout orientation="horizontal" class="list-group-item">
-                <Label [text]="card.name" dock="top" class="list-group-item"></Label>
-                <ListPicker [items]="tempDecksForDropDown" listIndex="{{i}}" dock="bottom" selectedIndex="0" (selectedIndexChange)="selectedIndexChanged($event)" class="p-15" width="50%"></ListPicker>
-            </DockLayout>
-        </ng-template>
-    </ListView>
-</GridLayout>
+<ListView [items]="catalogs" class="list-group">
+    <ng-template let-catalog="item" let-i="index">
+        <ns-play-item [cardDefinitionId]="catalog.cardDefinitionId"></ns-play-item>
+    </ng-template>
+</ListView>

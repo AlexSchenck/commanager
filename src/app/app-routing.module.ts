@@ -14,7 +14,7 @@ const routes: Routes = [
     { path: 'deck', component: DeckDetailComponent },
     { path: 'deck/:id', component: DeckDetailComponent },
     { path: 'decks', component: DecksComponent },
-    { path: 'play/:id', component: PlayComponent },
+    { path: 'play/:deckId', component: PlayComponent },
     { path: 'playConfirm', component: PlayConfirmComponent }
 ];
 

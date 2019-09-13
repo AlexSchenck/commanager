@@ -1,97 +1,43 @@
-import { Component, OnInit, IterableChangeRecord } from '@angular/core';
-import { ListPicker } from 'tns-core-modules/ui/list-picker';
-import { Observable, of } from 'rxjs';
-
-import { Color } from '../deck/color.enum';
-import { PlayService } from './play.service';
-import { IDeck } from '../deck/deck.interface';
+import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ICardDefinition } from '../card/card-definition.interface';
+import { ObservableArray } from 'tns-core-modules/data/observable-array/observable-array';
+import { ActionBar } from 'tns-core-modules/ui/action-bar/action-bar';
+import { EventData } from 'tns-core-modules/ui/page/page';
+
+import { ICatalog } from '../catalog/catalog.interface';
+import { SubscriptionComponent } from '../common/subscriptions/subscription.component';
+import { DataService } from '../data/data.service';
+import { IDeck } from '../deck/deck.interface';
 
 @Component({
     selector: 'ns-play',
     moduleId: module.id,
     templateUrl: './play.component.html'
 })
-export class PlayComponent implements OnInit {
-    public cardsInDeck: ICardDefinition[];
+export class PlayComponent extends SubscriptionComponent implements OnDestroy {
+    public catalogs: ObservableArray<ICatalog>;
     public deck: IDeck;
-    public decks: Observable<IDeck[]>;
-    public tempDecksForDropDown: any[];
-    public tempToStringForDropDown: any[];
+
+    private _deckId: number;
 
     constructor(
-        private _playService: PlayService,
+        private _dataService: DataService,
         private _route: ActivatedRoute
-    ) { }
+    ) {
+        super();
 
-    public ngOnInit(): void {
+        this._deckId = +this._route.snapshot.params.deckId;
 
-        const id = +this._route.snapshot.params.id;
-
-        // this.decks = this.deckService.decks;
-        this.deck = {
-            'id': 1,
-            'name': 'Izzet',
-            'commander': 'blah',
-            'colorIdentity': Color.White
-        };
-        this.cardsInDeck = [{
-            id: 112123,
-            name: 'Sol Ring'
-        }, {
-            id: 2222,
-            name: 'Lightning Greaves'
-        }, {
-            id: 33553,
-            name: 'Alex of Clan Smelly'
-        }, {
-            id: 45612,
-            name: 'Command Tower'
-        }];
-        this.tempDecksForDropDown = [{
-            'id': 1,
-            'name': 'Izzet',
-            'commander': 'blah',
-            'colorIdentity': Color.Blue,
-            toString: () => {
-                return 'Izzet';
-            }
-        }, {
-            'id': 2,
-            'name': 'Artifacts',
-            'commander': 'Blah 2',
-            'colorIdentity': Color.White,
-            toString: () => {
-                return 'Artifacts';
-            }
-        }];
-
-        this._playService.updates = new Map();
-        for (const i in this.cardsInDeck) {
-            this._playService.updates.set(this.cardsInDeck[i].id.toString(), 0);
-        }
-
-
-        // https://github.com/NativeScript/NativeScript/issues/1677
-        // Need to add to strings to each dropdown
-        // for (let i = 0; i < this.tempDecksForDropDown.length; i++) {
-        //     this.tempDecksForDropDown[i].toString = function() {
-        //         return this.tempDecksForDropDown[i].name;
-        //     }
-        // }
-
-        // todo:
-        // get deck by id
-        // Get all cards in deck
-        // get card definitions for each catalog entries by deck id
-        // Populate each dropdown
-        // for decks for each catalog entry get catalog entries by cardDefinitionId
+        this.subscriptions.push(this._dataService.getDeck(this._deckId).subscribe(deck => {
+            this.deck = deck;
+        }));
+        this.subscriptions.push(this._dataService.getCatalogs(this._deckId).subscribe(catalogs => {
+            this.catalogs = new ObservableArray(catalogs);
+        }));
     }
 
-    public selectedIndexChanged(args) {
-        const picker = <ListPicker>args.object;
-        this._playService.updates.set(this.cardsInDeck[args.object.listIndex].id.toString(), picker.selectedIndex);
+    public setActionBarTitle(args: EventData): void {
+        const actionBar: ActionBar = args.object as ActionBar;
+        actionBar.title = 'Play: ' + this.deck.name;
     }
-
 }

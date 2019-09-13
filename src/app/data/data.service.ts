@@ -21,9 +21,19 @@ export class DataService {
         private _dataTranslatorService: DataTranslatorService
     ) { }
 
+    public getCardDefinition(id: number): Observable<ICardDefinition> {
+        const condition = {
+            column: 'id',
+            value: id
+        };
+        return this._databaseService.query(DatabaseTable.CardDefinition, [condition]).pipe(
+            map(rows => rows && rows.length > 0 ? this._dataTranslatorService.toCardDefinition(rows[0]) : null)
+        );
+    }
+
     public getCardDefinitions(): Observable<ICardDefinition[]> {
         return this._databaseService.select(DatabaseTable.CardDefinition).pipe(
-            map(rows => rows.map(row => this._dataTranslatorService.toCardDefinition(row)))
+            map(rows => rows ? rows.map(row => this._dataTranslatorService.toCardDefinition(row)) : null)
         );
     }
 
@@ -43,14 +53,38 @@ export class DataService {
             }
         ];
         return this._databaseService.select(DatabaseTable.CardInstance, joins).pipe(
-            map(rows => rows.map(row => this._dataTranslatorService.toCardInstanceDetail(row)))
+            map(rows => rows ? rows.map(row => this._dataTranslatorService.toCardInstanceDetail(row)) : null)
+        );
+    }
+
+    public getCardInstanceDetailsForCardDefinition(cardDefinitionId: number): Observable<ICardInstanceDetail[]> {
+        const condition = {
+            column: 'cardDefinitionId',
+            value: cardDefinitionId
+        };
+        const joins = [
+            {
+                leftTable: DatabaseTable.CardInstance,
+                leftColumnName: 'cardDefinitionId',
+                rightTable: DatabaseTable.CardDefinition,
+                rightColumnName: 'id'
+            },
+            {
+                leftTable: DatabaseTable.CardInstance,
+                leftColumnName: 'currentDeckId',
+                rightTable: DatabaseTable.Deck,
+                rightColumnName: 'id'
+            }
+        ];
+        return this._databaseService.query(DatabaseTable.CardInstance, [condition], joins).pipe(
+            map(rows => rows ? rows.map(row => this._dataTranslatorService.toCardInstanceDetail(row)) : null)
         );
     }
 
     public getCatalogs(deckId: number): Observable<ICatalog[]> {
         const condition = { column: 'deckId', value: deckId };
         return this._databaseService.query(DatabaseTable.Catalog, [condition]).pipe(
-            map(rows => rows.map(row => this._dataTranslatorService.toCatalog(row)))
+            map(rows => rows ? rows.map(row => this._dataTranslatorService.toCatalog(row)) : null)
         );
     }
 
@@ -63,7 +97,7 @@ export class DataService {
 
     public getDecks(): Observable<IDeck[]> {
         return this._databaseService.select(DatabaseTable.Deck).pipe(
-            map(rows => rows.map(row => this._dataTranslatorService.toDeck(row)))
+            map(rows => rows ? rows.map(row => this._dataTranslatorService.toDeck(row)) : null)
         );
     }
 

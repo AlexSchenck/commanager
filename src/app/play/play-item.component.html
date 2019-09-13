@@ -1,0 +1,5 @@
+<StackLayout class="list-group-item" orientation="vertical">
+    <Label class="h2" [text]="cardDefinition?.name"></Label>
+    <Label text="From:"></Label>
+    <ListPicker #deckListPicker [items]="deckItems"></ListPicker>
+</StackLayout>

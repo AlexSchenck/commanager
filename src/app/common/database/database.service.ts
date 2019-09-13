@@ -62,15 +62,23 @@ export class DatabaseService {
         );
     }
 
-    public query(table: DatabaseTable, conditions: IDatabaseWhereCondition[]): Observable<any[]> {
+    public query(table: DatabaseTable, conditions: IDatabaseWhereCondition[], joins?: IDatabaseJoin[]): Observable<any[]> {
         if (!table) return of(null);
         if (!conditions) return this.select(table);
 
         return this._database.pipe(
             map(db => {
-                const selectSql = `SELECT * FROM ${table.toString()} WHERE `;
-                const whereSql = conditions.map(condition => `${condition.column} = ${condition.value}`).join(' AND ');
-                return from(db.all(`${selectSql}${whereSql}`));
+                const selectSql = `SELECT * FROM ${table.toString()}`;
+
+                const joinSql = !joins ? '' : joins.map(join => {
+                    const leftTable = join.leftTable.toString();
+                    const rightTable = join.rightTable.toString();
+                    return ` LEFT JOIN ${rightTable} ON ${leftTable}.${join.leftColumnName} = ${rightTable}.${join.rightColumnName}`;
+                }).join('');
+
+                const whereSql = conditions.map(condition => ` WHERE ${condition.column} = ${condition.value}`).join(' AND ');
+
+                return from(db.all(`${selectSql}${joinSql}${whereSql}`));
             }),
             concatMap((row: Observable<any[]>) => row)
         );
