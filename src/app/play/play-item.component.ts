@@ -3,6 +3,7 @@ import { ListPicker } from 'tns-core-modules/ui/list-picker/list-picker';
 
 import { ICardDefinition } from '../card/card-definition.interface';
 import { ICardInstanceDetail } from '../card/card-instance-detail.interface';
+import { IListPickerItem } from '../common/interfaces/list-picker-item.interface';
 import { SubscriptionComponent } from '../common/subscriptions/subscription.component';
 import { DataService } from '../data/data.service';
 
@@ -15,7 +16,8 @@ export class PlayItemComponent extends SubscriptionComponent implements OnInit, 
     public cardDefinition: ICardDefinition;
     @Input() public cardDefinitionId: number;
     public cardInstanceDetails: ICardInstanceDetail[];
-    public deckItems: string[];
+    public deckItems: IListPickerItem[];
+    public get selectedCardInstanceId(): number { return this.deckItems[this.deckListPicker.nativeElement.selectedIndex].id; }
 
     @ViewChild('deckListPicker', { static: false }) public deckListPicker: ElementRef<ListPicker>;
 
@@ -38,9 +40,10 @@ export class PlayItemComponent extends SubscriptionComponent implements OnInit, 
             this.cardInstanceDetails = cardInstances;
 
             // Get distinct deck names for these instances, then sort, putting "Collection" first
-            this.deckItems = this.cardInstanceDetails.map(instanceDetail => instanceDetail.currentDeckName || this.DEFAULT_DECK_NAME)
-                .filter((value: string, index: number, array: string[]) => array.indexOf(value) === index)
-                .sort((a, b) => this.sortInstances(a, b));
+            this.deckItems = this.cardInstanceDetails
+                .map(instanceDetail => ({ id: instanceDetail.id, toString: () => instanceDetail.currentDeckName || this.DEFAULT_DECK_NAME }))
+                .filter((value: IListPickerItem, index: number, array: IListPickerItem[]) => array.indexOf(value) === index)
+                .sort((a, b) => this.sortInstances(a.toString(), b.toString()));
         }));
     }
 

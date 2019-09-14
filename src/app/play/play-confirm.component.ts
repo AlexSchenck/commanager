@@ -25,12 +25,14 @@ export class PlayConfirmComponent implements OnInit {
 
     public ngOnInit(): void {
         this.updates = [];
+        /*
         this._playService.updates.forEach((value: number, key: string) => {
             this.updates.push({
                 cardId: key,
                 deckId: value
             });
         });
+        */
     }
 
     public updateCards(args: EventData) {

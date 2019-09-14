@@ -1,6 +1,6 @@
 <ActionBar class="action-bar" (loaded)="setActionBarTitle($event)">
     <NavigationButton [nsRouterLink]="['/decks']" android.systemIcon="ic_menu_close_clear_cancel"></NavigationButton>
-    <ActionItem [nsRouterLink]="['/playConfirm']" android.position="actionBar" android.systemIcon="ic_menu_send"></ActionItem>
+    <ActionItem android.position="actionBar" android.systemIcon="ic_menu_send" (tap)="submit()"></ActionItem>
 </ActionBar>
 <ListView [items]="catalogs" class="list-group">
     <ng-template let-catalog="item" let-i="index">
