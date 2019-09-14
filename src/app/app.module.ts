@@ -14,6 +14,7 @@ import { DecksComponent } from './deck/decks.component';
 import { DeckDetailComponent } from './deck/deck-detail.component';
 import { PlayComponent } from './play/play.component';
 import { PlayConfirmComponent } from './play/play-confirm.component';
+import { PlayConfirmItemComponent } from './play/play-confirm-item.component';
 import { PlayItemComponent } from './play/play-item.component';
 
 @NgModule({
@@ -37,6 +38,7 @@ import { PlayItemComponent } from './play/play-item.component';
         IfIosDirective,
         PlayComponent,
         PlayConfirmComponent,
+        PlayConfirmItemComponent,
         PlayItemComponent
     ],
     entryComponents: [

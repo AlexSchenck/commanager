@@ -27,7 +27,7 @@ export class DecksComponent extends SubscriptionComponent implements AfterViewIn
     ) {
         super();
 
-        this.subscriptions.push(this._dataService.getDecks().subscribe(decks => {
+        this.subscriptions.push(this._dataService.getAllDecks().subscribe(decks => {
             decks = decks.sort((a, b) => a.name > b.name ? 1 : -1);
             this.decks = new ObservableArray(decks);
         }));

@@ -45,11 +45,11 @@ export class CardDialogComponent extends SubscriptionComponent implements AfterV
         this.isSubmitEnabled = false;
         this._isOnlyInstanceOfDefinition = !!this._params.context.isOnlyInstanceOfDefinition;
 
-        this.subscriptions.push(this._dataService.getCardDefinitions().subscribe(cards => {
+        this.subscriptions.push(this._dataService.getAllCardDefinitions().subscribe(cards => {
             this._cardDefinitions = cards;
             this.cardDefinitionTokens = new ObservableArray<TokenModel>(cards.map(card => new TokenModel(card.name, null)));
         }));
-        this.subscriptions.push(this._dataService.getDecks().subscribe(decks => {
+        this.subscriptions.push(this._dataService.getAllDecks().subscribe(decks => {
             this._decks = decks;
             this.deckItems = [' '].concat(this._decks.map(deck => deck.name));
             this.setListPickerIndex();

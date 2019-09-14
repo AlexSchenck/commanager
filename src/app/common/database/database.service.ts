@@ -56,7 +56,10 @@ export class DatabaseService {
                     return ` LEFT JOIN ${rightTable} ON ${leftTable}.${join.leftColumnName} = ${rightTable}.${join.rightColumnName}`;
                 }).join('');
 
-                return from(db.all(`${selectSql}${joinSql}`));
+                const sql = `${selectSql}${joinSql}`;
+                console.log(sql);
+
+                return from(db.all(sql));
             }),
             concatMap((rows: Observable<any[]>) => rows)
         );
@@ -76,9 +79,12 @@ export class DatabaseService {
                     return ` LEFT JOIN ${rightTable} ON ${leftTable}.${join.leftColumnName} = ${rightTable}.${join.rightColumnName}`;
                 }).join('');
 
-                const whereSql = conditions.map(condition => ` WHERE ${condition.column} = ${condition.value}`).join(' AND ');
+                const whereSql = ` WHERE ${conditions.map(condition => `${condition.column} = ${condition.value}`).join(' OR ')}`;
 
-                return from(db.all(`${selectSql}${joinSql}${whereSql}`));
+                const sql = `${selectSql}${joinSql}${whereSql}`;
+                console.log(sql);
+
+                return from(db.all(sql));
             }),
             concatMap((row: Observable<any[]>) => row)
         );

@@ -66,7 +66,7 @@ export class DeckDetailComponent extends SubscriptionComponent implements OnDest
             this.deck = deck;
             this.title = this.deck.name;
         }));
-        this.subscriptions.push(this._dataService.getCatalogs(id).subscribe(catalogs => {
+        this.subscriptions.push(this._dataService.getCatalogsForDeck(id).subscribe(catalogs => {
             this.catalogs = new ObservableArray(catalogs);
         }));
     }
@@ -144,7 +144,7 @@ export class DeckDetailComponent extends SubscriptionComponent implements OnDest
     }
 
     private populateCards(): void {
-        this.subscriptions.push(this._dataService.getCardDefinitions().subscribe(cardDefinitions => {
+        this.subscriptions.push(this._dataService.getAllCardDefinitions().subscribe(cardDefinitions => {
             cardDefinitions = cardDefinitions.sort((a, b) => a.name > b.name ? 1 : -1);
             this.cards = new ObservableArray(cardDefinitions);
         }));

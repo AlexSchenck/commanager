@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, QueryList, ViewChildren } from '@angular/core';
+import { Component, OnDestroy, QueryList, ViewChildren } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { RouterExtensions } from 'nativescript-angular/router';
 import { ObservableArray } from 'tns-core-modules/data/observable-array/observable-array';
@@ -20,7 +20,7 @@ export class PlayComponent extends SubscriptionComponent implements OnDestroy {
     public catalogs: ObservableArray<ICatalog>;
     public deck: IDeck;
 
-    @ViewChildren('ns-play-item') public playItems: QueryList<ElementRef<PlayItemComponent>>;
+    @ViewChildren('playItem') public playItems: QueryList<PlayItemComponent>;
 
     private _deckId: number;
 
@@ -36,7 +36,7 @@ export class PlayComponent extends SubscriptionComponent implements OnDestroy {
         this.subscriptions.push(this._dataService.getDeck(this._deckId).subscribe(deck => {
             this.deck = deck;
         }));
-        this.subscriptions.push(this._dataService.getCatalogs(this._deckId).subscribe(catalogs => {
+        this.subscriptions.push(this._dataService.getCatalogsForDeck(this._deckId).subscribe(catalogs => {
             this.catalogs = new ObservableArray(catalogs);
         }));
     }
@@ -47,7 +47,7 @@ export class PlayComponent extends SubscriptionComponent implements OnDestroy {
     }
 
     public submit(): void {
-        const selectedCardInstanceIds: number[] = this.playItems.map(playItem => playItem.nativeElement.selectedCardInstanceId);
+        const selectedCardInstanceIds: number[] = this.playItems.map(playItem => playItem.selectedCardInstanceId);
         const queryParams = { deckId: this._deckId, cardInstanceIds: selectedCardInstanceIds };
         this._routerExtensions.navigate(['playConfirm'], { queryParams });
     }

@@ -31,13 +31,13 @@ export class DataService {
         );
     }
 
-    public getCardDefinitions(): Observable<ICardDefinition[]> {
+    public getAllCardDefinitions(): Observable<ICardDefinition[]> {
         return this._databaseService.select(DatabaseTable.CardDefinition).pipe(
             map(rows => rows ? rows.map(row => this._dataTranslatorService.toCardDefinition(row)) : null)
         );
     }
 
-    public getCardInstanceDetails(): Observable<ICardInstanceDetail[]> {
+    public getAllCardInstanceDetails(): Observable<ICardInstanceDetail[]> {
         const joins = [
             {
                 leftTable: DatabaseTable.CardInstance,
@@ -53,6 +53,27 @@ export class DataService {
             }
         ];
         return this._databaseService.select(DatabaseTable.CardInstance, joins).pipe(
+            map(rows => rows ? rows.map(row => this._dataTranslatorService.toCardInstanceDetail(row)) : null)
+        );
+    }
+
+    public getCardInstanceDetails(ids: number[]): Observable<ICardInstanceDetail[]> {
+        const conditions = ids.map(id => ({ column: `${DatabaseTable.CardInstance}.id`, value: id }));
+        const joins = [
+            {
+                leftTable: DatabaseTable.CardInstance,
+                leftColumnName: 'cardDefinitionId',
+                rightTable: DatabaseTable.CardDefinition,
+                rightColumnName: 'id'
+            },
+            {
+                leftTable: DatabaseTable.CardInstance,
+                leftColumnName: 'currentDeckId',
+                rightTable: DatabaseTable.Deck,
+                rightColumnName: 'id'
+            }
+        ];
+        return this._databaseService.query(DatabaseTable.CardInstance, conditions, joins).pipe(
             map(rows => rows ? rows.map(row => this._dataTranslatorService.toCardInstanceDetail(row)) : null)
         );
     }
@@ -81,7 +102,7 @@ export class DataService {
         );
     }
 
-    public getCatalogs(deckId: number): Observable<ICatalog[]> {
+    public getCatalogsForDeck(deckId: number): Observable<ICatalog[]> {
         const condition = { column: 'deckId', value: deckId };
         return this._databaseService.query(DatabaseTable.Catalog, [condition]).pipe(
             map(rows => rows ? rows.map(row => this._dataTranslatorService.toCatalog(row)) : null)
@@ -95,7 +116,14 @@ export class DataService {
         );
     }
 
-    public getDecks(): Observable<IDeck[]> {
+    public getDecks(ids: number[]): Observable<IDeck[]> {
+        const conditions = ids.map(id => ({ column: 'id', value: id }));
+        return this._databaseService.query(DatabaseTable.Deck, conditions).pipe(
+            map(rows => rows ? rows.map(row => this._dataTranslatorService.toDeck(row)) : null)
+        );
+    }
+
+    public getAllDecks(): Observable<IDeck[]> {
         return this._databaseService.select(DatabaseTable.Deck).pipe(
             map(rows => rows ? rows.map(row => this._dataTranslatorService.toDeck(row)) : null)
         );

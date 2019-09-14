@@ -1,7 +1,7 @@
 <StackLayout orientation="vertical">
     <RadAutoCompleteTextView class="cardInput" #cardAutoComplete [items]="cardDefinitionTokens" completionMode="Contains" suggestMode="Suggest" (textChanged)="setSubmitEnabled($event)" (loaded)="onAutoCompleteLoaded()" hint="Card Name*"></RadAutoCompleteTextView>
     <StackLayout class="deckLayout" orientation="horizontal">
-        <Label class="deckLabel" text="Current Deck"></Label>
+        <Label class="deckLabel" text="Currently In:"></Label>
         <ListPicker #deckListPicker class="deckPicker" [items]="deckItems"></ListPicker>
     </StackLayout>
     <StackLayout class="buttonLayout" orientation="horizontal" horizontalAlignment="right">

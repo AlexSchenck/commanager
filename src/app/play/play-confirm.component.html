@@ -1,14 +1,9 @@
 <ActionBar title="Confirm Changes" class="action-bar">
-        <Button class="btn btn-default" text="Submit" horizontalAlignment="right" (tap)="updateCards()"></Button>
+    <NavigationButton [nsRouterLink]="['/decks']" android.systemIcon="ic_menu_close_clear_cancel"></NavigationButton>
+    <ActionItem android.position="actionBar" android.systemIcon="ic_menu_send" (tap)="updateCards()"></ActionItem>
 </ActionBar>
-
-<GridLayout class="page">
-    <ListView [items]="updates" class="list-group">
-        <ng-template let-changeItem="item" let-i="index">
-            <DockLayout orientation="horizontal" class="list-group-item">
-                <Label [text]="changeItem.cardId" dock="top" class="list-group-item"></Label>
-                <Label [text]="changeItem.deckId" dock="top" class="list-group-item"></Label>
-            </DockLayout>
-        </ng-template>
-    </ListView>
-</GridLayout>
+<ListView [items]="updates" class="list-group">
+    <ng-template let-update="item">
+        <ns-play-confirm-item #playConfirmItem [deckId]="update.deckId" [cardNames]="update.cardNames"></ns-play-confirm-item>
+    </ng-template>
+</ListView>

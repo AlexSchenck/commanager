@@ -3,7 +3,7 @@
     <ActionItem android.position="actionBar" android.systemIcon="ic_menu_send" (tap)="submit()"></ActionItem>
 </ActionBar>
 <ListView [items]="catalogs" class="list-group">
-    <ng-template let-catalog="item" let-i="index">
-        <ns-play-item [cardDefinitionId]="catalog.cardDefinitionId"></ns-play-item>
+    <ng-template let-catalog="item">
+        <ns-play-item #playItem [cardDefinitionId]="catalog.cardDefinitionId"></ns-play-item>
     </ng-template>
 </ListView>
