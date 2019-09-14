@@ -97,6 +97,7 @@ export class DatabaseService {
             map(db => {
                 const delimiter = ', ';
                 const sql = `INSERT INTO ${table.toString()} (${columns.join(delimiter)}) VALUES (${values.map(_ => '?').join(delimiter)})`;
+                console.log(sql);
                 return from(db.execSQL(sql, values));
             }),
             concatMap((id: Observable<number>) => id)
@@ -116,6 +117,7 @@ export class DatabaseService {
                 let params = [];
                 values.forEach(value => params = params.concat(value));
 
+                console.log(sql);
                 return from(db.execSQL(sql, params));
             }),
             concatMap((id: Observable<number>) => id)
@@ -125,8 +127,11 @@ export class DatabaseService {
     public update(table: DatabaseTable, columns: string[], values: any[], id: number): Observable<number> {
         if (!table || !columns || !values) return of(null);
 
+        const sql = `UPDATE ${table.toString()} SET ${columns.map(column => `${column} = ?`).join(', ')} WHERE Id = ${id}`;
+        console.log(sql);
+
         return this._database.pipe(
-            map(db => from(db.execSQL(`UPDATE ${table.toString()} SET ${columns.map(column => `${column} = ?`).join(', ')} WHERE Id = ${id}`, values))),
+            map(db => from(db.execSQL(sql, values))),
             concatMap((rowsAffected: Observable<number>) => rowsAffected)
         );
     }
@@ -136,9 +141,10 @@ export class DatabaseService {
 
         let sql = `DELETE FROM ${table.toString()}`;
         if (conditions) {
-            sql += ` WHERE ${conditions.map(condition => `${condition.column} = ${condition.value}`).join(' AND ')}`;
+            sql += ` WHERE ${conditions.map(condition => `${condition.column} = ${condition.value}`).join(' OR ')}`;
         }
 
+        console.log(sql);
         return this._database.pipe(
             map(db => from(db.execSQL(sql))),
             concatMap((id: Observable<number>) => id)

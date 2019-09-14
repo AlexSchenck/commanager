@@ -1,6 +1,6 @@
 <ActionBar title="Confirm Changes" class="action-bar">
     <NavigationButton [nsRouterLink]="['/decks']" android.systemIcon="ic_menu_close_clear_cancel"></NavigationButton>
-    <ActionItem android.position="actionBar" android.systemIcon="ic_menu_send" (tap)="updateCards()"></ActionItem>
+    <ActionItem android.position="actionBar" android.systemIcon="ic_menu_send" (tap)="submit()"></ActionItem>
 </ActionBar>
 <ListView [items]="updates" class="list-group">
     <ng-template let-update="item">

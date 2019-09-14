@@ -1,8 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { RouterExtensions } from 'nativescript-angular/router';
 import { Observable } from 'rxjs';
 import { ObservableArray } from 'tns-core-modules/data/observable-array/observable-array';
 
+import { ICardInstance } from '../card/card-instance.interface';
 import { ICardInstanceDetail } from '../card/card-instance-detail.interface';
 import { SubscriptionComponent } from '../common/subscriptions/subscription.component';
 import { DataService } from '../data/data.service';
@@ -28,7 +30,8 @@ export class PlayConfirmComponent extends SubscriptionComponent implements OnIni
 
     constructor(
         private _dataService: DataService,
-        private _route: ActivatedRoute
+        private _route: ActivatedRoute,
+        private _routerExtensions: RouterExtensions
     ) {
         super();
     }
@@ -41,6 +44,13 @@ export class PlayConfirmComponent extends SubscriptionComponent implements OnIni
             this._cardInstanceDetails = cardInstanceDetails;
             const updates = this.toUpdates(this._cardInstanceDetails);
             this.updates = new ObservableArray(Object.keys(updates).map(updateKey => ({ deckId: +updateKey, cardNames: updates[updateKey] })));
+        }));
+    }
+
+    public submit(): void {
+        const instancesToSave: ICardInstance[] = this._cardInstanceDetails.map(detail => ({ id: detail.id, cardDefinitionId: detail.cardDefinitionId, currentDeckId: this._deckId }));
+        this.subscriptions.push(this._dataService.saveCardInstances(instancesToSave).subscribe(_ => {
+            this._routerExtensions.navigateByUrl('decks');
         }));
     }
 

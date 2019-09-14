@@ -147,6 +147,21 @@ export class DataService {
         );
     }
 
+    public saveCardInstances(cardInstances: ICardInstance[]): Observable<number> {
+        if (!cardInstances) return of(null);
+
+        // Delete instances passed in, then save all of them with new deckId
+        let resultObs = this.deleteCardInstances(cardInstances.map(cardInstance => cardInstance.id));
+
+        if (cardInstances.length > 0) {
+            resultObs = resultObs.pipe(
+                concatMap(_ => this.saveMany(DatabaseTable.CardInstance, ...this._dataTranslatorService.toDatabaseColumnsAndManyValues(cardInstances)))
+            );
+        }
+
+        return resultObs;
+    }
+
     public saveCatalogs(deckId: number, cardDefinitionIds: number[]): Observable<number> {
         if (!deckId || !cardDefinitionIds) return of(null);
 
@@ -178,6 +193,10 @@ export class DataService {
 
     public deleteCardInstance(id: number): Observable<number> {
         return this._databaseService.delete(DatabaseTable.CardInstance, [{ column: 'id', value: id }]);
+    }
+
+    public deleteCardInstances(ids: number[]): Observable<number> {
+        return this._databaseService.delete(DatabaseTable.CardInstance, ids.map(id => ({ column: 'id', value: id })));
     }
 
     public deleteCatalogs(deckId: number): Observable<number> {
