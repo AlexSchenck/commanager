@@ -1,5 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Observable, of } from 'rxjs';
+import { ObservableArray } from 'tns-core-modules/data/observable-array/observable-array';
 
 import { SubscriptionComponent } from '../common/subscriptions/subscription.component';
 import { DataService } from '../data/data.service';
@@ -14,6 +15,9 @@ export class PlayConfirmItemComponent extends SubscriptionComponent implements O
     @Input() public cardNames: string[];
     public deckName: string;
     @Input() public deckId: number;
+    public observableCardNames: ObservableArray<string>;
+
+    private readonly DEFAULT_DECK_NAME = 'Collection';
 
     constructor(
         private _dataService: DataService
@@ -22,9 +26,11 @@ export class PlayConfirmItemComponent extends SubscriptionComponent implements O
     }
 
     public ngOnInit(): void {
-        const obs: Observable<IDeck> = this.deckId === 0 ? of({ name: 'Collection' }) : this._dataService.getDeck(this.deckId);
-        this.subscriptions.push(obs.subscribe(deck => {
-            this.deckName = deck.name;
-        }));
+        const obs: Observable<IDeck> = this.deckId === 0 ? of({ name: this.DEFAULT_DECK_NAME }) : this._dataService.getDeck(this.deckId);
+        this.subscriptions.push(obs.subscribe(deck => this.deckName = deck.name));
+
+        this.observableCardNames = new ObservableArray(this.cardNames
+            .filter((value: string, index: number, array: string[]) => array.indexOf(value) === index)
+            .sort((a, b) => a > b ? 1 : -1));
     }
 }
