@@ -19,10 +19,9 @@ import { PlayItemComponent } from './play-item.component';
 export class PlayComponent extends SubscriptionComponent implements OnDestroy {
     public catalogs: ObservableArray<ICatalog>;
     public deck: IDeck;
+    public deckId: number;
 
     @ViewChildren('playItem') public playItems: QueryList<PlayItemComponent>;
-
-    private _deckId: number;
 
     constructor(
         private _dataService: DataService,
@@ -31,12 +30,12 @@ export class PlayComponent extends SubscriptionComponent implements OnDestroy {
     ) {
         super();
 
-        this._deckId = +this._route.snapshot.params.deckId;
+        this.deckId = +this._route.snapshot.params.deckId;
 
-        this.subscriptions.push(this._dataService.getDeck(this._deckId).subscribe(deck => {
+        this.subscriptions.push(this._dataService.getDeck(this.deckId).subscribe(deck => {
             this.deck = deck;
         }));
-        this.subscriptions.push(this._dataService.getCatalogsForDeck(this._deckId).subscribe(catalogs => {
+        this.subscriptions.push(this._dataService.getCatalogsForDeck(this.deckId).subscribe(catalogs => {
             this.catalogs = new ObservableArray(catalogs);
         }));
     }
@@ -47,8 +46,8 @@ export class PlayComponent extends SubscriptionComponent implements OnDestroy {
     }
 
     public submit(): void {
-        const selectedCardInstanceIds: number[] = this.playItems.map(playItem => playItem.selectedCardInstanceId);
-        const queryParams = { deckId: this._deckId, cardInstanceIds: selectedCardInstanceIds };
+        const selectedCardInstanceIds: number[] = this.playItems.map(playItem => playItem.selectedCardInstanceId).filter(id => !!id);
+        const queryParams = { deckId: this.deckId, cardInstanceIds: selectedCardInstanceIds };
         this._routerExtensions.navigate(['playConfirm'], { queryParams });
     }
 }

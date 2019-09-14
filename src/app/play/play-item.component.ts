@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostBinding, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ListPicker } from 'tns-core-modules/ui/list-picker/list-picker';
 
 import { ICardDefinition } from '../card/card-definition.interface';
@@ -16,8 +16,12 @@ export class PlayItemComponent extends SubscriptionComponent implements OnInit, 
     public cardDefinition: ICardDefinition;
     @Input() public cardDefinitionId: number;
     public cardInstanceDetails: ICardInstanceDetail[];
+    @Input() public deckId: number;
     public deckItems: IListPickerItem[];
-    public get selectedCardInstanceId(): number { return this.deckItems[this.deckListPicker.nativeElement.selectedIndex].id; }
+    public get selectedCardInstanceId(): number { return this.isHidden ? null : this.deckItems[this.deckListPicker.nativeElement.selectedIndex].id; }
+
+    @HostBinding('hidden')
+    public isHidden: boolean = false;
 
     @ViewChild('deckListPicker', { static: false }) public deckListPicker: ElementRef<ListPicker>;
 
@@ -41,9 +45,12 @@ export class PlayItemComponent extends SubscriptionComponent implements OnInit, 
 
             // Get distinct deck names for these instances, then sort, putting "Collection" first
             this.deckItems = this.cardInstanceDetails
+                .filter(instanceDetail => instanceDetail.currentDeckId !== this.deckId)
                 .map(instanceDetail => ({ id: instanceDetail.id, toString: () => instanceDetail.currentDeckName || this.DEFAULT_DECK_NAME }))
                 .filter((value: IListPickerItem, index: number, array: IListPickerItem[]) => array.indexOf(value) === index)
                 .sort((a, b) => this.sortInstances(a.toString(), b.toString()));
+
+            if (this.deckItems.length === 0) this.isHidden = true;
         }));
     }
 

@@ -4,6 +4,6 @@
 </ActionBar>
 <ListView [items]="catalogs" class="list-group">
     <ng-template let-catalog="item">
-        <ns-play-item #playItem [cardDefinitionId]="catalog.cardDefinitionId"></ns-play-item>
+        <ns-play-item #playItem [cardDefinitionId]="catalog.cardDefinitionId" [deckId]="deckId"></ns-play-item>
     </ng-template>
 </ListView>
