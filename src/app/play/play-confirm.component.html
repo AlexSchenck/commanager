@@ -2,7 +2,7 @@
     <NavigationButton [nsRouterLink]="['/decks']" android.systemIcon="ic_menu_close_clear_cancel"></NavigationButton>
     <ActionItem android.position="actionBar" android.systemIcon="ic_menu_send" (tap)="submit()"></ActionItem>
 </ActionBar>
-<ListView [items]="updates" class="list-group">
+<ListView [items]="updates">
     <ng-template let-update="item">
         <ns-play-confirm-item #playConfirmItem [deckId]="update.deckId" [cardNames]="update.cardNames"></ns-play-confirm-item>
     </ng-template>

@@ -16,7 +16,7 @@
         <Label class="h3 card-label" text="Shared Cards:" verticalAlignment="center"></Label>
         <Button class="-outline list-header-button" text="Add" verticalAlignment="center" (tap)="openCardDialog()"></Button>
     </StackLayout>
-    <ListView class="list-group card-list" [items]="cards">
+    <ListView class="card-list" [items]="cards">
         <ng-template let-card="item">
             <StackLayout orientation="horizontal">
                 <Label class="list-item-label" [text]="card.name"></Label>

@@ -1,9 +1,13 @@
 <ActionBar class="action-bar" (loaded)="setActionBarTitle($event)">
     <NavigationButton [nsRouterLink]="['/decks']" android.systemIcon="ic_menu_close_clear_cancel"></NavigationButton>
-    <ActionItem android.position="actionBar" android.systemIcon="ic_menu_send" (tap)="submit()"></ActionItem>
+    <ActionItem android.position="actionBar" android.systemIcon="ic_menu_send" (tap)="submit()" *ngIf="hasCatalogs"></ActionItem>
 </ActionBar>
-<ListView [items]="catalogs" class="list-group">
+<ListView [items]="catalogs" *ngIf="hasCatalogs">
     <ng-template let-catalog="item">
         <ns-play-item #playItem [cardDefinitionId]="catalog.cardDefinitionId" [deckId]="deckId"></ns-play-item>
     </ng-template>
 </ListView>
+<StackLayout class="empty-list-layout" orientation="vertical" *ngIf="!hasCatalogs">
+    <Label text="This deck has no shared cards." textAlignment="center" textWrap="true"></Label>
+    <Label text="You can set them by editing this deck from the main menu." textAlignment="center" textWrap="true"></Label>
+</StackLayout>

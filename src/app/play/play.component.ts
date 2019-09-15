@@ -14,12 +14,14 @@ import { PlayItemComponent } from './play-item.component';
 @Component({
     selector: 'ns-play',
     moduleId: module.id,
+    styleUrls: ['./play.component.css'],
     templateUrl: './play.component.html'
 })
 export class PlayComponent extends SubscriptionComponent implements OnDestroy {
     public catalogs: ObservableArray<ICatalog>;
     public deck: IDeck;
     public deckId: number;
+    public hasCatalogs: boolean;
 
     @ViewChildren('playItem') public playItems: QueryList<PlayItemComponent>;
 
@@ -31,12 +33,14 @@ export class PlayComponent extends SubscriptionComponent implements OnDestroy {
         super();
 
         this.deckId = +this._route.snapshot.params.deckId;
+        this.hasCatalogs = false;
 
         this.subscriptions.push(this._dataService.getDeck(this.deckId).subscribe(deck => {
             this.deck = deck;
         }));
         this.subscriptions.push(this._dataService.getCatalogsForDeck(this.deckId).subscribe(catalogs => {
             this.catalogs = new ObservableArray(catalogs);
+            this.hasCatalogs = this.catalogs ? this.catalogs.length > 0 : null;
         }));
     }
 
