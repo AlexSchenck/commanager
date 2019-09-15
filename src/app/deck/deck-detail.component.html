@@ -1,9 +1,8 @@
 <ActionBar class="action-bar" title="{{title}}"></ActionBar>
-
 <StackLayout class="page" orientation="vertical">
     <StackLayout class="text-field-layout" orientation="vertical">
-        <TextField #nameTextField class="input input-border" hint="Name*" [text]="deck?.name" maxLength="64" (textChange)="setSubmitEnabled($event)"></TextField>
-        <TextField #commanderTextField class="input input-border" hint="Commander" [text]="deck?.commander" maxLength="64"></TextField>
+        <TextField #nameTextField class="h3 input" hint="Name*" [text]="deck?.name" maxLength="64" (textChange)="setSubmitEnabled($event)"></TextField>
+        <TextField #commanderTextField class="h3 input" hint="Commander" [text]="deck?.commander" maxLength="64"></TextField>
     </StackLayout>
     <Label class="h3 color-label" text="Color Identity:"></Label>
     <StackLayout class="checkbox-layout" orientation="horizontal">
@@ -17,7 +16,7 @@
         <Label class="h3 card-label" text="Shared Cards:" verticalAlignment="center"></Label>
         <Button class="btn btn-outline list-header-button" text="Add" verticalAlignment="center" (tap)="openCardDialog()"></Button>
     </StackLayout>
-    <ListView class="page list-group card-list" [items]="cards">
+    <ListView class="list-group card-list" [items]="cards">
         <ng-template let-card="item">
             <StackLayout class="list-group-item" orientation="horizontal">
                 <Label class="list-item-label" [text]="card.name"></Label>

@@ -8,9 +8,9 @@ import { DatabaseService } from './common/database/database.service';
     templateUrl: './app.component.html'
 })
 export class AppComponent {
-	constructor (
-		_databaseService: DatabaseService
-	) {
-		_databaseService.initialize().subscribe();
-	}
+    constructor(
+        _databaseService: DatabaseService
+    ) {
+        _databaseService.initialize().subscribe();
+    }
 }

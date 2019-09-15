@@ -1,4 +1,4 @@
-<ActionBar title="Decks" class="action-bar">
+<ActionBar class="action-bar" title="Decks">
     <!-- Side drawer -->
     <NavigationButton icon="res://baseline_menu_black_48dp" (tap)="toggleDrawer()" *ifAndroid></NavigationButton>
     <ActionItem icon="res://menu" ios.position="left" (tap)="toggleDrawer()" *ifIos></ActionItem>
@@ -8,12 +8,15 @@
     <ActionItem icon="res://add" ios.position="right" [nsRouterLink]="['/deck']" *ifIos></ActionItem>
 </ActionBar>
 <RadSideDrawer>
-    <StackLayout tkDrawerContent orientation="vertical" class="sideMenu">
-        <StackLayout [nsRouterLink]="['/cards']" class="sideMenuItem">
-            <Label text="Manage Shared Cards" class="sideMenuLabel"></Label>
+    <StackLayout tkDrawerContent class="page" orientation="vertical">
+        <StackLayout class="sideMenuItem" [nsRouterLink]="['/cards']">
+            <Label class="body sideMenuLabel" text="Manage Shared Cards"></Label>
+        </StackLayout>
+        <StackLayout class="sideMenuItem" orientation="horizontal" (tap)="toggleTheme()">
+            <Label class="body sideMenuLabel" text="Toggle Dark Theme"></Label>
         </StackLayout>
     </StackLayout>
-    <ListView tkMainContent [items]="decks" class="page list-group">
+    <ListView tkMainContent class="page list-group" [items]="decks">
         <ng-template let-deck="item">
             <StackLayout class="list-group-item" orientation="horizontal" [nsRouterLink]="['/deck', deck.id]">
                 <StackLayout class="deck-label-layout" orientation="vertical" verticalAlignment="center">

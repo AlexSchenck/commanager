@@ -8,6 +8,8 @@ import { DataService } from '../data/data.service';
 import { Color, ColorSymbol } from './color.enum';
 import { IDeck } from './deck.interface';
 
+const Theme = require('nativescript-theme-core');
+
 @Component({
     selector: 'ns-decks',
     moduleId: module.id,
@@ -53,5 +55,9 @@ export class DecksComponent extends SubscriptionComponent implements AfterViewIn
     public toggleDrawer(): void {
         // Close the drawer if it's open, open it if it's closed
         this._drawer[this._drawer.getIsOpen() ? 'closeDrawer' : 'showDrawer']();
+    }
+
+    public toggleTheme(): void {
+        Theme.toggleMode();
     }
 }
