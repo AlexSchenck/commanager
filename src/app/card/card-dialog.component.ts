@@ -7,6 +7,7 @@ import { concatMap } from 'rxjs/operators';
 import { ObservableArray } from 'tns-core-modules/data/observable-array';
 import { ListPicker } from 'tns-core-modules/ui/list-picker/list-picker';
 
+import { IListPickerItem } from '../common/interfaces/list-picker-item.interface';
 import { SubscriptionComponent } from '../common/subscriptions/subscription.component';
 import { DataService } from '../data/data.service';
 import { IDeck } from '../deck/deck.interface';
@@ -22,7 +23,7 @@ import { ICardInstanceDetail } from './card-instance-detail.interface';
 export class CardDialogComponent extends SubscriptionComponent implements AfterViewInit, OnDestroy {
     public cardDefinitionTokens: ObservableArray<TokenModel>;
     public cardInstance: ICardInstanceDetail;
-    public deckItems: string[];
+    public deckItems: IListPickerItem[];
     public isSubmitEnabled: boolean;
 
     public get cardDialogResult() { return CardDialogResult; }
@@ -51,7 +52,7 @@ export class CardDialogComponent extends SubscriptionComponent implements AfterV
         }));
         this.subscriptions.push(this._dataService.getAllDecks().subscribe(decks => {
             this._decks = decks;
-            this.deckItems = [' '].concat(this._decks.map(deck => deck.name));
+            this.deckItems = [{ id: null, toString: () => ' ' }].concat(this._decks.map(deck => ({ id: deck.id, toString: () => deck.name })));
             this.setListPickerIndex();
         }));
     }
@@ -79,8 +80,8 @@ export class CardDialogComponent extends SubscriptionComponent implements AfterV
 
         // Get the deck object from the item selected in the control, if any
         const listPicker = this.deckListPicker.nativeElement;
-        const deckName = listPicker.selectedIndex !== 0 ? this.deckItems[listPicker.selectedIndex] : null;
-        const deck = deckName ? this._decks.find(deck => deck.name === deckName) : null;
+        const deckItem = listPicker.selectedIndex !== 0 ? this.deckItems[listPicker.selectedIndex] : null;
+        const deck = deckItem ? this._decks.find(deck => deck.id === deckItem.id) : null;
 
         // If this instance name is being changed, and is the last instance of its definition, update the definition name
         const cardDefinition: ICardDefinition = {
@@ -103,7 +104,7 @@ export class CardDialogComponent extends SubscriptionComponent implements AfterV
 
     private setListPickerIndex(): void {
         if (this.cardInstance && this.cardInstance.currentDeckId && this.deckListPicker) {
-            this.deckListPicker.nativeElement.selectedIndex = this.deckItems.findIndex(deckItem => this.cardInstance.currentDeckName === deckItem);
+            this.deckListPicker.nativeElement.selectedIndex = this.deckItems.findIndex(deckItem => this.cardInstance.currentDeckId === deckItem.id);
         }
     }
 }

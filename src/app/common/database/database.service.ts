@@ -20,7 +20,6 @@ export class DatabaseService {
         this._database = this._connection || this.initialize();
     }
 
-    // TODO: Error handling
     public initialize(): Observable<any> {
         this._connection = from(new Sqlite('Commanager'));
 

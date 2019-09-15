@@ -4,8 +4,7 @@
     <ActionItem icon="res://menu" ios.position="left" (tap)="toggleDrawer()" *ifIos></ActionItem>
 
     <!-- Add Deck button -->
-    <ActionItem icon="res://baseline_add_black_48dp" [nsRouterLink]="['/deck']" *ifAndroid></ActionItem>
-    <ActionItem icon="res://add" ios.position="right" [nsRouterLink]="['/deck']" *ifIos></ActionItem>
+    <ActionItem android.position="actionBar" android.systemIcon="ic_menu_add" [nsRouterLink]="['/deck']"></ActionItem>
 </ActionBar>
 <RadSideDrawer>
     <StackLayout tkDrawerContent class="page" orientation="vertical">
@@ -18,13 +17,13 @@
     </StackLayout>
     <ListView tkMainContent class="page list-group" [items]="decks">
         <ng-template let-deck="item">
-            <StackLayout class="list-group-item" orientation="horizontal" [nsRouterLink]="['/deck', deck.id]">
+            <StackLayout orientation="horizontal" [nsRouterLink]="['/deck', deck.id]">
                 <StackLayout class="deck-label-layout" orientation="vertical" verticalAlignment="center">
                     <Label [text]="deck.name"></Label>
                     <Label class="deck-commander-label" [text]="deck.commander"></Label>
                     <Label [text]="toColorString(deck.colorIdentity)"></Label>
                 </StackLayout>
-                <Button class="btn btn-primary" [nsRouterLink]="['/play', deck.id]" text="Play" verticalAlignment="center"></Button>
+                <Button class="-primary" [nsRouterLink]="['/play', deck.id]" text="Play" verticalAlignment="center"></Button>
             </StackLayout>
         </ng-template>
     </ListView>
