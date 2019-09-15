@@ -1,5 +1,6 @@
-<StackLayout orientation="vertical" *ngIf="!isHidden">
+<StackLayout orientation="vertical">
     <Label class="h2" [text]="cardDefinition?.name"></Label>
-    <Label text="From:"></Label>
-    <ListPicker #deckListPicker [items]="deckItems"></ListPicker>
+    <Label text="From:" *ngIf="!hideListPicker"></Label>
+    <ListPicker #deckListPicker [items]="deckItems" *ngIf="!hideListPicker"></ListPicker>
+    <Label text="Already in deck" *ngIf="hideListPicker"></Label>
 </StackLayout>
