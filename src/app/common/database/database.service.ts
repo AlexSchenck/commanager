@@ -48,17 +48,10 @@ export class DatabaseService {
         return this._database.pipe(
             map(db => {
                 const selectSql = `SELECT * FROM ${table.toString()}`;
-                if (!joins) return from(db.all(selectSql));
-
-                const joinSql = joins.map(join => {
-                    const leftTable = join.leftTable.toString();
-                    const rightTable = join.rightTable.toString();
-                    return ` LEFT JOIN ${rightTable} ON ${leftTable}.${join.leftColumnName} = ${rightTable}.${join.rightColumnName}`;
-                }).join('');
+                const joinSql = this.toJoinSql(joins);
 
                 const sql = `${selectSql}${joinSql}`;
                 console.log(sql);
-
                 return from(db.all(sql));
             }),
             concatMap((rows: Observable<any[]>) => rows)
@@ -72,18 +65,11 @@ export class DatabaseService {
         return this._database.pipe(
             map(db => {
                 const selectSql = `SELECT * FROM ${table.toString()}`;
-
-                const joinSql = !joins ? '' : joins.map(join => {
-                    const leftTable = join.leftTable.toString();
-                    const rightTable = join.rightTable.toString();
-                    return ` LEFT JOIN ${rightTable} ON ${leftTable}.${join.leftColumnName} = ${rightTable}.${join.rightColumnName}`;
-                }).join('');
-
+                const joinSql = this.toJoinSql(joins);
                 const whereSql = ` WHERE ${conditions.map(condition => `${condition.column} = ${condition.value}`).join(' OR ')}`;
 
                 const sql = `${selectSql}${joinSql}${whereSql}`;
                 console.log(sql);
-
                 return from(db.all(sql));
             }),
             concatMap((row: Observable<any[]>) => row)
@@ -193,5 +179,13 @@ export class DatabaseService {
             FOREIGN KEY (DeckId) REFERENCES Deck(Id) ON DELETE CASCADE
         )`;
         return from(db.execSQL(sql)).pipe(map(() => db));
+    }
+
+    private toJoinSql(joins: IDatabaseJoin[]): string {
+        return !joins ? '' : joins.map(join => {
+            const leftTable = join.leftTable.toString();
+            const rightTable = join.rightTable.toString();
+            return ` LEFT JOIN ${rightTable} ON ${leftTable}.${join.leftColumnName} = ${rightTable}.${join.rightColumnName}`;
+        }).join('');
     }
 }
