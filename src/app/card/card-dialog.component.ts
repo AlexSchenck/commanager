@@ -75,8 +75,9 @@ export class CardDialogComponent extends SubscriptionComponent implements AfterV
         }
 
         // Get the card definition object from the name given in the control (case-insensitive), if any
-        const cardName = this.cardAutoComplete.autoCompleteTextView.text.toLowerCase();
-        const existingCardDefinition = this._cardDefinitions.find(card => card.name.toLowerCase() === cardName);
+        const cardName = this.cardAutoComplete.autoCompleteTextView.text;
+        const cardNameForCompare = cardName.toLowerCase();
+        const existingCardDefinition = this._cardDefinitions.find(card => card.name.toLowerCase() === cardNameForCompare);
 
         // Get the deck object from the item selected in the control, if any
         const listPicker = this.deckListPicker.nativeElement;
