@@ -1,8 +1,10 @@
 <ActionBar class="action-bar" title="Shared Cards">
-    <NavigationButton [nsRouterLink]="['/decks']" android.systemIcon="ic_menu_back"></NavigationButton>
+    <!-- Cancel button -->
+    <NavigationButton [nsRouterLink]="['/decks']" android.systemIcon="ic_menu_back" *ifAndroid></NavigationButton>
+    <ActionItem [nsRouterLink]="['/decks']" ios.position="left" *ifIos></ActionItem>
 
     <!-- Add Card button -->
-    <ActionItem android.position="actionBar" android.systemIcon="ic_menu_add" (tap)="openDialog()"></ActionItem>
+    <ActionItem android.position="actionBar" android.systemIcon="ic_menu_add" ios.position="right" ios.systemIcon="4" (tap)="openDialog()"></ActionItem>
 </ActionBar>
 <ListView [items]="cards" class="page list-group">
     <ng-template let-card="item">

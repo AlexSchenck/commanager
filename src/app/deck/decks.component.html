@@ -4,7 +4,7 @@
     <ActionItem icon="res://menu" ios.position="left" (tap)="toggleDrawer()" *ifIos></ActionItem>
 
     <!-- Add Deck button -->
-    <ActionItem android.position="actionBar" android.systemIcon="ic_menu_add" [nsRouterLink]="['/deck']"></ActionItem>
+    <ActionItem [nsRouterLink]="['/deck']" android.position="actionBar" android.systemIcon="ic_menu_add" ios.position="right" ios.systemIcon="4"></ActionItem>
 </ActionBar>
 <RadSideDrawer>
     <StackLayout tkDrawerContent class="page" orientation="vertical">
