@@ -6,9 +6,9 @@
     <!-- Add Card button -->
     <ActionItem android.position="actionBar" android.systemIcon="ic_menu_add" ios.position="right" ios.systemIcon="4" (tap)="openDialog()"></ActionItem>
 </ActionBar>
-<ListView [items]="cards" class="page list-group">
+<ListView [items]="cards">
     <ng-template let-card="item">
-        <StackLayout class="list-group-item" orientation="horizontal">
+        <StackLayout orientation="horizontal">
             <StackLayout class="label-layout" orientation="vertical" verticalAlignment="center" (tap)="openDialog(card)">
                 <Label [text]="card.cardDefinitionName"></Label>
                 <Label class="card-deck-label" text="Currently In: {{card.currentDeckName || 'Collection'}}"></Label>

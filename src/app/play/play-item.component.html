@@ -1,4 +1,4 @@
-<StackLayout class="list-group-item" orientation="vertical" *ngIf="!isHidden">
+<StackLayout orientation="vertical" *ngIf="!isHidden">
     <Label class="h2" [text]="cardDefinition?.name"></Label>
     <Label text="From:"></Label>
     <ListPicker #deckListPicker [items]="deckItems"></ListPicker>

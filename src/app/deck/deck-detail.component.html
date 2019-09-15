@@ -1,5 +1,5 @@
 <ActionBar class="action-bar" title="{{title}}"></ActionBar>
-<StackLayout class="page" orientation="vertical">
+<StackLayout orientation="vertical">
     <StackLayout class="text-field-layout" orientation="vertical">
         <TextField #nameTextField class="h3 input" hint="Name*" [text]="deck?.name" maxLength="64" (textChange)="setSubmitEnabled($event)"></TextField>
         <TextField #commanderTextField class="h3 input" hint="Commander" [text]="deck?.commander" maxLength="64"></TextField>
@@ -18,7 +18,7 @@
     </StackLayout>
     <ListView class="list-group card-list" [items]="cards">
         <ng-template let-card="item">
-            <StackLayout class="list-group-item" orientation="horizontal">
+            <StackLayout orientation="horizontal">
                 <Label class="list-item-label" [text]="card.name"></Label>
                 <CheckBox id={{card.id}} #catalogCheckbox [checked]="hasCatalog(card.id)"></CheckBox>
             </StackLayout>

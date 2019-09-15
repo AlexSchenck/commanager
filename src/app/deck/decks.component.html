@@ -7,7 +7,7 @@
     <ActionItem [nsRouterLink]="['/deck']" android.position="actionBar" android.systemIcon="ic_menu_add" ios.position="right" ios.systemIcon="4"></ActionItem>
 </ActionBar>
 <RadSideDrawer>
-    <StackLayout tkDrawerContent class="page" orientation="vertical">
+    <StackLayout tkDrawerContent orientation="vertical">
         <StackLayout class="sideMenuItem" [nsRouterLink]="['/cards']">
             <Label class="body sideMenuLabel" text="Manage Shared Cards"></Label>
         </StackLayout>
@@ -15,7 +15,7 @@
             <Label class="body sideMenuLabel" text="Toggle Dark Theme"></Label>
         </StackLayout>
     </StackLayout>
-    <ListView tkMainContent class="page list-group" [items]="decks">
+    <ListView tkMainContent [items]="decks">
         <ng-template let-deck="item">
             <StackLayout orientation="horizontal" [nsRouterLink]="['/deck', deck.id]">
                 <StackLayout class="deck-label-layout" orientation="vertical" verticalAlignment="center">
