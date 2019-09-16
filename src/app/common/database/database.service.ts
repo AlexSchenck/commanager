@@ -13,12 +13,9 @@ const Sqlite = require('nativescript-sqlite');
 })
 export class DatabaseService {
     private _connection: Observable<any>;
-    private _database: Observable<any>;
 
-    constructor() {
-        // For use when making SQL statements. Default to _initialize if _connection is undefined/closed
-        this._database = this._connection || this.initialize();
-    }
+    // For use when making SQL statements. Default to _initialize if _connection is undefined/closed
+    private get _database(): Observable<any> { return this._connection || this.initialize(); }
 
     public initialize(): Observable<any> {
         this._connection = from(new Sqlite('Commanager'));

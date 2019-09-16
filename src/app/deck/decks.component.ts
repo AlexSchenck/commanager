@@ -1,6 +1,7 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ViewChild, OnDestroy } from '@angular/core';
 import { RadSideDrawer } from 'nativescript-ui-sidedrawer';
 import { RadSideDrawerComponent } from 'nativescript-ui-sidedrawer/angular';
+import { android, AndroidActivityBackPressedEventData, AndroidApplication } from 'tns-core-modules/application';
 import { ObservableArray } from 'tns-core-modules/data/observable-array/observable-array';
 
 import { SubscriptionComponent } from '../common/subscriptions/subscription.component';
@@ -33,6 +34,11 @@ export class DecksComponent extends SubscriptionComponent implements AfterViewIn
             decks = decks.sort((a, b) => a.name > b.name ? 1 : -1);
             this.decks = new ObservableArray(decks);
         }));
+
+        android.on(AndroidApplication.activityBackPressedEvent, (data: AndroidActivityBackPressedEventData) => {
+            // The back button here will exit the app and cause it to break when opening it again. Force the user to close it via other means
+            data.cancel = true;
+        });
     }
 
     public ngAfterViewInit(): void {
