@@ -17,8 +17,8 @@
     </StackLayout>
     <ListView tkMainContent [items]="decks">
         <ng-template let-deck="item">
-            <StackLayout orientation="horizontal" [nsRouterLink]="['/deck', deck.id]">
-                <StackLayout class="deck-label-layout" orientation="vertical" verticalAlignment="center">
+            <StackLayout orientation="horizontal">
+                <StackLayout class="deck-label-layout" orientation="vertical" verticalAlignment="center" [nsRouterLink]="['/deck', deck.id]">
                     <Label [text]="deck.name"></Label>
                     <Label class="deck-commander-label" [text]="deck.commander"></Label>
                     <Label [text]="toColorString(deck.colorIdentity)"></Label>
