@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { RouterExtensions } from 'nativescript-angular/router';
 import { ObservableArray } from 'tns-core-modules/data/observable-array/observable-array';
 import { ActionBar } from 'tns-core-modules/ui/action-bar/action-bar';
+import { alert } from 'tns-core-modules/ui/dialogs';
 import { EventData } from 'tns-core-modules/ui/page/page';
 
 import { ICatalog } from '../catalog/catalog.interface';
@@ -50,6 +51,15 @@ export class PlayComponent extends SubscriptionComponent implements OnDestroy {
     }
 
     public submit(): void {
+        if (!this.playItems.some(item => !item.hideListPicker)) {
+            alert({
+                title: 'Deck is ready to play',
+                message: 'All shared cards needed for this deck are already included.',
+                okButtonText: 'OK'
+            });
+            return;
+        }
+
         const selectedCardInstanceIds: number[] = this.playItems.map(playItem => playItem.selectedCardInstanceId).filter(id => !!id);
         const queryParams = { deckId: this.deckId, cardInstanceIds: selectedCardInstanceIds };
         this._routerExtensions.navigate(['playConfirm'], { queryParams });
