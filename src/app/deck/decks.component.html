@@ -20,8 +20,8 @@
             <StackLayout orientation="horizontal">
                 <StackLayout class="deck-label-layout" orientation="vertical" verticalAlignment="center" [nsRouterLink]="['/deck', deck.id]">
                     <Label [text]="deck.name"></Label>
-                    <Label class="deck-commander-label" [text]="deck.commander"></Label>
-                    <Label [text]="toColorString(deck.colorIdentity)"></Label>
+                    <Label class="deck-subtitle-label" [text]="deck.commander"></Label>
+                    <Label class="deck-subtitle-label" [text]="toColorString(deck.colorIdentity)"></Label>
                 </StackLayout>
                 <Button class="-primary" [nsRouterLink]="['/play', deck.id]" text="Play" verticalAlignment="center"></Button>
             </StackLayout>
