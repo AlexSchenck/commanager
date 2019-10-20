@@ -24,7 +24,7 @@
     "@nstudio/nativescript-checkbox": "^1.0.0",
     "nativescript-angular": "^8.2.1",
     "nativescript-sqlite": "^2.3.3",
-    "nativescript-theme-core": "^2.0.20",
+    "nativescript-theme-core": "^2.0.24",
     "nativescript-ui-autocomplete": "^5.1.0",
     "nativescript-ui-sidedrawer": "^7.0.0",
     "reflect-metadata": "~0.1.12",

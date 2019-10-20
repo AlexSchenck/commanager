@@ -1,7 +1,7 @@
 <ActionBar class="action-bar" title="Shared Cards">
     <!-- Cancel button -->
     <NavigationButton [nsRouterLink]="['/decks']" android.systemIcon="ic_menu_back" *ifAndroid></NavigationButton>
-    <ActionItem [nsRouterLink]="['/decks']" ios.position="left" *ifIos></ActionItem>
+    <ActionItem [nsRouterLink]="['/decks']" ios.position="left" ios.systemIcon="1" *ifIos></ActionItem>
 
     <!-- Add Card button -->
     <ActionItem android.position="actionBar" android.systemIcon="ic_menu_add" ios.position="right" ios.systemIcon="4" (tap)="openDialog()"></ActionItem>
